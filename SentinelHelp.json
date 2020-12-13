@@ -1,0 +1,23 @@
+{
+    "short":{
+        "Fun":
+            "`insult`, `compliment`, `hack`"
+            ,
+        "Miscellaneous":
+            "`purge`, `reload`, `botinfo`"
+
+    },
+    "full":{    
+        "Fun Commands:":[
+            "insult   - Insults a tagged user"
+            ,"compliment   - Compliments a tagged user"
+            ,"hack  - `Hacks` a tagged user or word"
+
+        ],
+        "Miscellaneous Commands":[
+            "purge   - Deletes x amount of messages in the text-channel"
+            ,"reload   - Attempts to reload either all cogs or a certain cog"
+            ,"botinfo   - Displays some information about Sentinel"
+        ]
+    }
+}
