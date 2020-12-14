@@ -1,4 +1,5 @@
 import datetime
+import asyncio
 import discord
 from discord.ext import commands
 
@@ -24,7 +25,10 @@ class Misc(commands.Cog):
             await ctx.send("Oi cunt! I can only clear between 1 & 50 messages at a time, y u entering something outside that range?!?!")
             return
         try:
-            await ctx.message.channel.purge(limit=limit)
+            await ctx.message.channel.purge(limit=(limit+1))
+            msg=await ctx.send("Previous "+str(limit)+" messages deleted")
+            await asyncio.sleep(2)
+            await ctx.msg.delete()
         except discord.Forbidden:
             await ctx.send("You didn't give me enough permissions dipshit. Give me `Manage Messages` permission headass")
 
