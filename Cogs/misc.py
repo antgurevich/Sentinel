@@ -11,7 +11,8 @@ class Misc(commands.Cog):
     async def changelog(self,ctx):
         logEmbed=discord.Embed(title="Sentinel Change Log",color=discord.Color.teal())
         logDict={
-                "12/13/20": "Added `changelog` command\nAdded role requirement for `reload` and `purge` commands"
+                "12/14/20": "Updated `purge` command to not include command message, also sends message when completed"
+                ,"12/13/20": "Added `changelog` command\nAdded role requirement for `reload` and `purge` commands"
                 ,"12/12/20":"Initial version of Sentinel released"
                 }
         for key in logDict:
