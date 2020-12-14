@@ -131,7 +131,7 @@ class Fun(commands.Cog):
         if isinstance(error,commands.MissingRequiredArgument):
             await ctx.send("We need a target!!! :face_with_symbols_over_mouth: Our team of hackers are waiting! Use .s hack [place or user]")
 ###########################################################################
-    @commands.command(name="insult") #Chooses random insult from list to insult tagged user
+    @commands.command(name="insult", aliases=["roast"]) #Chooses random insult from list to insult tagged user
     async def insult(self, ctx, user: discord.Member=None):
         insultList=[
                     "if laughter is the best medicine, your face must be curing the world"
