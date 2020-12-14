@@ -1,11 +1,53 @@
 import random
 import time
+import asyncio
 import discord
 from discord.ext import commands
 
 class Fun(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
+###########################################################################
+    @commands.command(name="fight")
+    async def fight(self, ctx, user: discord.Member=None):
+        
+        await ctx.send("The shithead of an owner hasn't finished making this feature yet!! Check back later :slight_smile: ")
+        return
+        
+        try:
+            p1health=100
+            p2health=100
+            
+            print (1)
+            if user==ctx.author:
+                await ctx.send("Uhhh... fighting with yourself? Just look in the mirror to do that")
+                return
+            print (2)
+            duelMsg=await ctx.send(user.mention+", "+ctx.author.mention+" has challenged you to a duel! Choose a reaction to **attack**, **heal**, or **end**")
+            
+            emojiList=["⚔️","❤️","🏃‍♂️"]
+            print (3)
+            
+            for reaction in reactionList:
+                await duelMsg.add_reaction(emoji)
+            def response():
+                pass
+
+            try:
+                print (4)
+                action=await self.bot.wait_for("reaction_add",check=response,timeout=10.0)
+            except asyncio.TimeoutError:
+                return await ("Bruh, you took too long to respond. Imagine forfeiting :stuck_out_tongue_closed_eyes:")
+        
+        except Exception as e:
+            print (e)
+
+    @fight.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error,commands.MemberNotFound):
+            await ctx.send("That person doesnt exist dumbass. Use *.s fight @[username]*")
+        elif isinstance(error,commands.MissingRequiredArgument):
+            await ctx.send("If you're gonna pick a fight with someone, at least actually pick a person :rolling_eyes: Use *.s fight @[username]*")
 ###########################################################################
     @commands.command(name="hack") #"Hacks" a tagged user or any phrase entered as argument
     async def hack(self,ctx, *, arg):
@@ -164,10 +206,11 @@ class Fun(commands.Cog):
                         ]
         if user:
             await ctx.send(user.mention+", someone who's actually nice ("+ctx.author.mention+") wanted to tell you that "+random.choice(complimentList))
-
+        else:
+            await ctx.send("Yo dumbnuts, does the user you are trying to compliment even exist? Use .s compliment @[username]")
     @compliment.error
     async def clear_error(self, ctx,error):
-        if isinstance(error,commands.BadArgument):
+        if isinstance(error,commands.MissingRequiredArgument):
             await ctx.send("You gotta actually ping the user you want to compliment... Use *.s compliment @[username]*")
 ###########################################################################
 def setup(bot):
