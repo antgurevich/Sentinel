@@ -1,10 +1,10 @@
 {
     "short":{
         "Fun":
-            "`insult`, `compliment`, `hack`"
+            "`insult`, `compliment`, `hack`, **DISABLED:**`fight`"
             ,
         "Miscellaneous":
-            "`purge`, `reload`, `botinfo`"
+            "`purge`, `reload`, `botinfo`, `changelog`"
 
     },
     "full":{    
@@ -12,12 +12,14 @@
             "insult   - Insults a tagged user"
             ,"compliment   - Compliments a tagged user"
             ,"hack  - `Hacks` a tagged user or word"
+            ,"fight    - **DISABLED** Starts a 'fight' with a tagged person"
 
         ],
         "Miscellaneous Commands":[
-            "purge   - Deletes x amount of messages in the text-channel"
-            ,"reload   - Attempts to reload either all cogs or a certain cog"
+            "purge   - Deletes x amount of messages in the text-channel (requires `Manage Message` permission)"
+            ,"reload   - Attempts to reload either all cogs or a certain cog (requires `Admin` permissions)"
             ,"botinfo   - Displays some information about Sentinel"
+            ,"changelog - Displays changes made to Sentinel"
         ]
     }
 }
