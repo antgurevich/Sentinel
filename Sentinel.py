@@ -12,7 +12,7 @@ bot.remove_command("help")
 @bot.event #Loads all cogs and initiates bot
 async def on_ready():
     
-    cogList=["fun","misc"]
+    cogList=["fun","misc", "mod"]
     
     for cog in cogList:
         cog=("Cogs."+cog)
