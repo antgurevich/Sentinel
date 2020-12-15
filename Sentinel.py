@@ -98,5 +98,4 @@ async def on_message(message):
 
     await bot.process_commands(message) #Enables commands'''
 ###########################################################################
-#bot.run(os.environ["DISCORDTOKEN"])
-bot.run("NzgzODM3Mjk5NzM2NTc2MDMw.X8gjXw.yL-7M19bInDXKYFn7H4iIs2u72A")
+bot.run(os.environ["DISCORDTOKEN"])
