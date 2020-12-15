@@ -69,9 +69,13 @@ async def help(ctx, arg: str=""):
         for key in data:
             helpEmbed.add_field(name=key, value=data[key], inline=False)
     
-    else:
-        await ctx.send("Can't you read? You have to either use *.s help -f* for the full guide, or *.s help -s* for the short version (lazy ass)")
-        return
+    else: #Defaults to short version
+        with open("SentinelHelp.json", "r") as helpFile:
+            data = json.load(helpFile)
+        data = data['short']
+        for key in data:
+            helpEmbed.add_field(name=key, value=data[key], inline=False)
+    
     
     try:
         await ctx.send("So you decided to ask for help... well here it is ya' brat")
@@ -94,4 +98,5 @@ async def on_message(message):
 
     await bot.process_commands(message) #Enables commands'''
 ###########################################################################
-bot.run(os.environ["DISCORDTOKEN"])
+#bot.run(os.environ["DISCORDTOKEN"])
+bot.run("NzgzODM3Mjk5NzM2NTc2MDMw.X8gjXw.yL-7M19bInDXKYFn7H4iIs2u72A")
