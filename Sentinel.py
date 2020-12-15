@@ -98,4 +98,8 @@ async def on_message(message):
 
     await bot.process_commands(message) #Enables commands'''
 ###########################################################################
-bot.run(os.environ["DISCORDTOKEN"])
+try:
+    bot.run(os.environ["DISCORDTOKEN"])
+except:
+    temp = open("token.txt", "r")
+    bot.run(temp.readline())
