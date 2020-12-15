@@ -1,4 +1,5 @@
 import asyncio
+import json
 import discord
 from discord.ext import commands
 
@@ -9,13 +10,13 @@ class Misc(commands.Cog):
     @commands.command(name="changelog",aliases=["changes","updates"])
     async def changelog(self,ctx):
         logEmbed=discord.Embed(title="Sentinel Change Log",color=discord.Color.teal())
-        logDict={
-                "12/14/20": "Added admin cog, with several new commands\nUpdated `purge` command to not include command message, also sends message when completed\nAdded 2 aliases for 'insult' command"
-                ,"12/13/20": "Added `changelog` command\nAdded role requirement for `reload` and `purge` commands"
-                ,"12/12/20":"Initial version of Sentinel released"
-                }
-        for key in logDict:
-            logEmbed.add_field(name=key,value=logDict[key],inline=False)
+        
+        with open("SentinelChangeLog.json","r") as logFile:
+            data=json.load(logFile)
+        data=data["changeLog"]
+        for key in data:
+            logEmbed.add_field(name=("*"+key+"*"),value=data[key],inline=False)
+        
         await ctx.send(embed=logEmbed)   
 ###########################################################################
     @commands.command(name="purge", aliases=["clear","delete"]) #Clears previous x amount of messages (x between 1 & 50)
