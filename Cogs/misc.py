@@ -1,4 +1,3 @@
-import datetime
 import asyncio
 import discord
 from discord.ext import commands
@@ -11,7 +10,7 @@ class Misc(commands.Cog):
     async def changelog(self,ctx):
         logEmbed=discord.Embed(title="Sentinel Change Log",color=discord.Color.teal())
         logDict={
-                "12/14/20": "Updated `purge` command to not include command message, also sends message when completed\nAdded 'roast' alias for 'insult' command"
+                "12/14/20": "Added admin cog, with several new commands\nUpdated `purge` command to not include command message, also sends message when completed\nAdded 2 aliases for 'insult' command"
                 ,"12/13/20": "Added `changelog` command\nAdded role requirement for `reload` and `purge` commands"
                 ,"12/12/20":"Initial version of Sentinel released"
                 }
@@ -29,9 +28,9 @@ class Misc(commands.Cog):
             await ctx.message.channel.purge(limit=(limit+1))
             msg=await ctx.send("Previous "+str(limit)+" messages deleted")
             await asyncio.sleep(2)
-            await ctx.msg.delete()
+            await msg.delete()
         except discord.Forbidden:
-            await ctx.send("You didn't give me enough permissions dipshit. Give me `Manage Messages` permission headass")
+           await ctx.send("You didn't give me enough permissions dipshit. Give me `Manage Messages` permission headass")
 
     @purge.error
     async def clear_error(self, ctx, error):
@@ -59,7 +58,7 @@ class Misc(commands.Cog):
     @commands.command(name='reload') #Reloads cogs
     @commands.has_permissions(administrator=True)
     async def reloadCogs(self, ctx, arg=None):
-        cogList = ["fun","misc"]
+        cogList = ["fun","misc", "mod"]
         if not arg:
             await ctx.send("Please type either *.s reload all* to reload all cogs or *.s reload [cog]* to reload a certain cog")
             return await ctx.send(embed=discord.Embed(title='Cogs:', description="\n".join(cogList)))    
