@@ -47,6 +47,7 @@ class Misc(commands.Cog):
         infoDict={
                 "Created": "December 2020"
                 ,"Language": "Python 3.8.1"
+                ,"Open Source GitHub": "https://github.com/antgurevich/Sentinel"
                 }
         infoEmbed=discord.Embed(title="Created by PureCache#0001",color=discord.Color.orange())
         infoEmbed.set_author(name="Sentinel Information")
@@ -59,7 +60,7 @@ class Misc(commands.Cog):
     @commands.command(name='reload') #Reloads cogs
     @commands.has_permissions(administrator=True)
     async def reloadCogs(self, ctx, arg=None):
-        cogList = ["fun","misc", "mod"]
+        cogList = ["fun","misc", "games","mod"]
         if not arg:
             await ctx.send("Please type either *.s reload all* to reload all cogs or *.s reload [cog]* to reload a certain cog")
             return await ctx.send(embed=discord.Embed(title='Cogs:', description="\n".join(cogList)))    
