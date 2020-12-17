@@ -12,7 +12,7 @@ bot.remove_command("help")
 @bot.event #Loads all cogs and initiates bot
 async def on_ready():
     
-    cogList=["fun","misc", "mod"]
+    cogList=["fun","misc","games", "mod"]
     
     for cog in cogList:
         cog=("Cogs."+cog)
@@ -30,7 +30,7 @@ async def on_guild_join(guild):
     sysChannel=guild.system_channel
     if sysChannel:
         try:
-            await sysChannel.send("Sup bitches, i'm here to fuck shit up... since y'all are uneducated, type *.s help -f* to learn some stuff about me... if you dare :expressionless:")
+            await sysChannel.send("Sup bitches, i'm here to fuck shit up... since y'all are uneducated, type *.s help* to learn some stuff about me... if you dare :expressionless:")
         except Exception as error:
             print (error)
 ###########################################################################
