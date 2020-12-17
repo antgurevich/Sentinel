@@ -39,12 +39,25 @@ async def on_member_join(member):
     sysChannel=member.guild.system_channel
     if sysChannel:
         await sysChannel.send("Well well well... look who joined... welcome to hell "+member.mention)
+        embed=discord.Embed()
+        embed.set_image(url="https://media.tenor.co/images/3ccff8c4b2443d93811eac9b2fd56f11/raw")
+        await sysChannel.send(embed=embed)
 ###########################################################################
 @bot.event #Sends a message when someone leaves the server
 async def on_member_remove(member):
+    embed=discord.Embed()
+    for channel in member.guild.text_channels:
+        if isinstance(channel, discord.TextChannel):
+            if "goodbye" in str(channel):
+                await channel.send("Adios "+member.mention+"... \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t**asshole**")
+                embed.set_image(url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif")
+                await channel.send(embed=embed)
+                return
     sysChannel=member.guild.system_channel
     if sysChannel:
-        await sysChannel.send("Adios "+member.mention+"... \t\t\t\t\t\t\t\t\t\t\t**asshole**")
+        await sysChannel.send("Adios "+member.mention+"... \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t**asshole**")
+        embed.set_image(url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif")
+        await channel.send(embed=embed)
 ###########################################################################
 @bot.command(name="help") #Help messages
 async def help(ctx, arg: str=""):
