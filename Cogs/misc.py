@@ -11,7 +11,7 @@ class Misc(commands.Cog):
     async def changelog(self,ctx):
         logEmbed=discord.Embed(title="Sentinel Change Log",color=discord.Color.teal())
         
-        with open("SentinelChangeLog.json","r") as logFile:
+        with open("SentinelHelp.json","r") as logFile:
             data=json.load(logFile)
         data=data["changeLog"]
         for key in data:
