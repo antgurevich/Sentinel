@@ -1,6 +1,7 @@
 {
     "changeLog":{
-        "12/14/20": "**Added admin cog, with several new commands**\nShifted change log into a json file for ease of edit\nNot entering an argument for .s help defaults it to short\nUpdated `purge` command to not include command message, also sends message when completed\nAdded 2 aliases for 'insult' command"
+        "12/16/20": "Added Rock-Paper-Scissors game (.s rps), .s eatburger, .s kill, .s 8ball, .s cointoss\nAdded .s warn for admins "
+        ,"12/14/20": "**Added admin cog, with several new commands**\nShifted change log into a json file for ease of edit\nNot entering an argument for .s help defaults it to short\nUpdated `purge` command to not include command message, also sends message when completed\nAdded 2 aliases for 'insult' command"
         ,"12/13/20": "Added `changelog` command\nAdded role requirement for `reload` and `purge` commands"
         ,"12/12/20":"Initial version of Sentinel released"
     }
