@@ -6,6 +6,32 @@ class Mod(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.command(name="warn")
+    @commands.has_permissions(kick_members=True)
+    async def warn(self, ctx, user: discord.Member=None, *, reason=None):
+        if user is None:
+            await ctx.send("Who am I warning chief? You gotta tell me. Use *.s warn @username [optional_reason]*")
+        elif (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
+            await ctx.send("You are trying to warn someone who has a role higher or equal to yours! Smh my head")
+        else:
+            #await ctx.message.channel.purge(limit=1)
+            embed=discord.Embed(color=discord.Color.red())
+            if reason:
+                await user.send(f"You have been warned in **{ctx.guild}** for **{reason}**")
+                #await ctx.send(f"You have been warned by {ctx.author.mention} for {reason}")
+                embed.add_field(name="Warning", value=(f"**User **{user.mention} has been warned by {ctx.author.mention} for **{reason}**"))
+            else:
+                await user.send(f"You have been warned in **{ctx.guild}**")
+                #await ctx.send(f"You have been warned by {ctx.author.mention} for {reason}")
+                embed.add_field(name="Warning", value=(f"**User **{user.mention} has been warned by {ctx.author.mention}"))
+            await ctx.send(embed=embed)
+    @warn.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error,commands.MissingPermissions):
+            await ctx.send("You can't warn people smallbrain, you don't have permission.")
+        elif isinstance(error,commands.BadArgument):
+            await ctx.send("You did it wrong... Do *.s warn @username [optional_reason]")
+###########################################################################
     @commands.command(name="mute")
     @commands.has_permissions(kick_members=True)
     async def mute(self,ctx, user: discord.Member=None, time: str = None):
