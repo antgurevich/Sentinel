@@ -1,13 +1,16 @@
 {
     "short":{
         "Fun":
-            "`insult`, `compliment`, `hack`, **DISABLED:**`fight`"
+            "`insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`"
+        ,
+        "Games":
+            "`rps`, **DISABLED:**`fight`"
         ,
         "Miscellaneous":
             "`purge`, `reload`, `botinfo`, `changelog`"
         ,
         "Mod":
-            "`mute`, `unmute`, `kick`, `ban`, `unban`"
+            "`warn` ,`mute`, `unmute`, `kick`, `ban`, `unban`"
 
     },
     "full":{    
@@ -15,8 +18,14 @@
             "insult   - Insults a tagged user"
             ,"compliment   - Compliments a tagged user"
             ,"hack  - `Hacks` a tagged user or word"
+            ,"eatburger    - Eats a burger"
+            ,"kill      - Kinda obvious isn't it?"
+            ,"8ball     - Ask a question for it to be answered!"
+            ,"cointoss     - Flips a coin"
+        ],
+        "Game Commands:":[
+            "rps    - Plays rock-paper-scissors with the bot"
             ,"fight    - **DISABLED** Starts a 'fight' with a tagged person"
-
         ],
         "Miscellaneous Commands:":[
             "purge   - Deletes x amount of messages in the text-channel (requires `Manage Message` permission)"
@@ -25,7 +34,8 @@
             ,"changelog - Displays changes made to Sentinel"
         ],
         "Mod Commands:":[
-            "mute   - Mutes a user (requires `Kick Members` permissions)"
+            "warn   - Warns a user (requires `Kick Members` permissions)"
+            ,"mute   - Mutes a user (requires `Kick Members` permissions)"
             ,"unmute    - Unmutes a muted user (requires `Kick Members` permissons)"
             ,"kick  - Kicks user from the server (requires `Kick Members` permissons)"
             ,"ban   - Bans user from the server (requires `Ban Members` permissons)"
