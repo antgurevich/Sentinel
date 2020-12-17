@@ -7,46 +7,55 @@ class Fun(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
-    @commands.command(name="fight")
-    async def fight(self, ctx, user: discord.Member=None):
-        
-        await ctx.send("The shithead of an owner hasn't finished making this feature yet!! Check back later :slight_smile: ")
-        return
-        
-        try:
-            p1health=100
-            p2health=100
-            
-            print (1)
-            if user==ctx.author:
-                await ctx.send("Uhhh... fighting with yourself? Just look in the mirror to do that")
-                return
-            print (2)
-            duelMsg=await ctx.send(user.mention+", "+ctx.author.mention+" has challenged you to a duel! Choose a reaction to **attack**, **heal**, or **end**")
-            
-            emojiList=["⚔️","❤️","🏃‍♂️"]
-            print (3)
-            
-            for reaction in reactionList:
-                await duelMsg.add_reaction(emoji)
-            def response():
-                pass
-
-            try:
-                print (4)
-                action=await self.bot.wait_for("reaction_add",check=response,timeout=10.0)
-            except asyncio.TimeoutError:
-                return await ("Bruh, you took too long to respond. Imagine forfeiting :stuck_out_tongue_closed_eyes:")
-        
-        except Exception as e:
-            print (e)
-
-    @fight.error
-    async def clear_error(self, ctx, error):
-        if isinstance(error,commands.MemberNotFound):
-            await ctx.send("That person doesnt exist dumbass. Use *.s fight @[username]*")
-        elif isinstance(error,commands.MissingRequiredArgument):
-            await ctx.send("If you're gonna pick a fight with someone, at least actually pick a person :rolling_eyes: Use *.s fight @[username]*")
+    @commands.command(name="cointoss", aliases=["flip", "coinflip", "coin"])
+    async def cointoss(self, ctx):
+        coin=["https://cdn.pixabay.com/photo/2013/07/12/19/19/coin-154560_640.png","https://th.bing.com/th/id/OIP.AhqNSM1dzobSLYaEIeQ68gHaHa?pid=Api&rs=1"] #[heads, tails]
+        embed=discord.Embed(title="Flipping coin...")
+        embed.set_image(url="https://media.giphy.com/media/10bv4HhibS9nZC/giphy.gif")
+        await ctx.send(embed=embed)
+        await asyncio.sleep(2)
+        await ctx.message.channel.purge(limit=1)
+        flip=random.choice(coin)
+        if flip=="https://cdn.pixabay.com/photo/2013/07/12/19/19/coin-154560_640.png":
+            title="It was heads!"
+        else:
+            title="It was tails!"
+        embed=discord.Embed(title=title)
+        embed.set_image(url=flip)
+        await ctx.send(embed=embed)
+###########################################################################
+    @commands.command(name="8ball", aliases=["8-ball","eight ball", "eightball", "eight-ball", "8b"])
+    async def eightBall(self, ctx, *, question=None):
+        if question is None:
+            await ctx.send("Uhh... are you going to ask a question?")
+        elif "commit suicide" in question or "kill myself" in question or "off myself" in question:
+            await ctx.send("Dude. Please, no. :/\n<https://suicidepreventionlifeline.org/>")
+        else:
+            choices=["Hell yea!", "Duh...", "Lmaooooooo\nNo","Probably better not to tell you..."
+                    ,"Of course not","Silly goose, not in a million years", "Pff never", "My sources say no"
+                    ,"Of course my dude!", "Hell-freaking-yea!!","Maybe, who knows??", "Nah","Mmmmmm perhaps ^-^"
+                    ,"Not even a question, of course!", "Go for it my guy!!", "hard to tell, ask again"]
+            await ctx.send(random.choice(choices))
+###########################################################################
+    @commands.command(name="eatburger", aliases=["eat","munch","chomp"])
+    async def eatburger(self, ctx):
+        img=["https://viralviralvideos.com/wp-content/uploads/GIF/2014/09/Eating-hamburger-GIF.gif"
+            ,"https://media1.tenor.com/images/db4d036795f662c70615b441193cbdff/tenor.gif?itemid=4131428"
+            ,"https://cdn.firstwefeast.com/assets/2012/10/Ozersky.gif"
+            ,"https://media.giphy.com/media/xT5LMxRvs78WoGa1G0/giphy.gif"
+            ,"https://media.tenor.co/images/22956a7613064890b17d7ae7b5cb93c1/raw"
+            ]
+        author=str(ctx.message.author)[:-5]
+        embed=discord.Embed(title=author+" when they go to McDonalds")
+        embed.set_image(url=random.choice(img))
+        await ctx.send(embed=embed)
+###########################################################################
+    @commands.command(name="kill", aliases=["murder"])
+    async def kill(self, ctx, user: discord.Member=None):
+        if user==ctx.message.author:
+            await ctx.send(":flushed:... please don't")
+        else:
+            await ctx.send("No.")
 ###########################################################################
     @commands.command(name="hack") #"Hacks" a tagged user or any phrase entered as argument
     async def hack(self,ctx, *, arg):
