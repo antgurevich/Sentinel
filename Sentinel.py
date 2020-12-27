@@ -1,5 +1,6 @@
 import psycopg2
 import json
+from configparser import ConfigParser
 import os
 import discord
 from discord.ext import commands
@@ -53,19 +54,19 @@ async def on_member_remove(member):
     for channel in member.guild.text_channels:
         if isinstance(channel, discord.TextChannel):
             if "goodbye" in str(channel):
-                await channel.send("Adios "+member.mention+"... \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
+                await channel.send("Adios **"+str(member)+"**... \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
                 embed.set_image(url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif")
                 await channel.send(embed=embed)
                 return
     sysChannel=member.guild.system_channel
     if sysChannel:
-        await sysChannel.send("Adios "+member.mention+"... \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
+        await sysChannel.send("Adios **"+str(member)+"**... \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
         embed.set_image(url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif")
         await sysChannel.send(embed=embed)
 ###########################################################################
 @bot.command(name="help") #Help messages
 async def help(ctx, arg: str=""):
-    helpEmbed=discord.Embed(title="Sentinel Prefix: **.s**",color=discord.Color.green())
+    helpEmbed=discord.Embed(title="Sentinel Prefix: **.s**\t\tKey: ()=required; []=optional",color=discord.Color.green())
     helpEmbed.set_author(name="An Idiot's Guide to Sentinel")
     helpEmbed.set_footer(text="Some moron named PureCache made me")
 
@@ -103,10 +104,33 @@ async def help(ctx, arg: str=""):
 @help.error
 async def clear_error(ctx,error):
     if isinstance(error,commands.MissingRequiredArgument):
-        await ctx.send(ctx.message.author.mention+", guess what? You typed it wrong *dipshit*, use *.s help -f* for an extensive guide or *.s help -s* for a short guide")
+        await ctx.send(ctx.message.author.mention+", guess what? You typed it wrong *dipshit*, use *.s help -f* for an extensive guide or *.s help* for a short guide")
 ###########################################################################
+'''@bot.event
+async def on_message(message):
+    if message.author==bot.user: #Ensures bot doesn't respond to itself
+        return
+    
+    if message.content.startswith("hi"):
+        await message.channel.send("Hello @"+str(message.author.mention))
+
+    await bot.process_commands(message) #Enables commands'''
+###########################################################################
+try:
+    conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
+    print ("Database connection established from environment")
+except:
+    config_object=ConfigParser()
+    config_object.read("SentinelVariables.ini")
+    variables=config_object["variables"]
+    DATABASE_URL=variables["DATABASE_URL"]
+    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    print ("Database connection established from .ini")
 try:
     bot.run(os.environ["DISCORDTOKEN"])
 except:
-    temp = open("token.txt", "r")
-    bot.run(temp.readline())
+    config_object=ConfigParser()
+    config_object.read("SentinelVariables.ini")
+    variables=config_object["variables"]
+    DISCORD_TOKEN=variables["DISCORD_TOKEN"]
+    bot.run(DISCORD_TOKEN)
