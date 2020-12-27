@@ -60,7 +60,12 @@ class Misc(commands.Cog):
     @commands.command(name='reload') #Reloads cogs
     @commands.has_permissions(administrator=True)
     async def reloadCogs(self, ctx, arg=None):
-        cogList = ["fun","misc", "games","mod"]
+        
+        with open("SentinelHelp.json","r") as cogFile:
+            data=json.load(cogFile)
+        data=data["Cogs"]
+        cogList=list(data.keys())
+        
         if not arg:
             await ctx.send("Please type either *.s reload all* to reload all cogs or *.s reload [cog]* to reload a certain cog")
             return await ctx.send(embed=discord.Embed(title='Cogs:', description="\n".join(cogList)))    
