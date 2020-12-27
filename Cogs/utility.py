@@ -19,11 +19,11 @@ class Utility(commands.Cog):
             return
         
         if unit.lower()=="f":
-            newTemp=((temp - 32) * 5.0/9.0)
+            newTemp=round(((temp - 32) * 5.0/9.0),2)
             title=(str(temp)+"° Fahrenheit is "+str(newTemp)+"° Celsius")
             
         else:
-            newTemp=((9.0/5.0 * temp) + 32)
+            newTemp=round(((9.0/5.0 * temp) + 32),2)
             title=(str(temp)+"° Celsius is "+str(newTemp)+"° Fahrenheit")
         title=str(title)
         embed=discord.Embed(title=title, color=discord.Color.orange())
