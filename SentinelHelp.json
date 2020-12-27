@@ -49,7 +49,8 @@
         ]
     },
     "changeLog":{
-        "12/26/20": "**Added Utility Commands cog**\n*Current commands: temperature converter (`.s temp`)*\nModified Rock-Paper-Scissors to send embeds instead of messages.\nRemoved the word 'asshole' from member leaving message.\nFixed the Goodbye GIF sending to the wrong channel glitch"
+        "12/27/20":"Fixed `.s temp` to round to the nearest hundreth"
+        ,"12/26/20": "**Added Utility Commands cog**\n*Current commands: temperature converter (`.s temp`)*\nModified Rock-Paper-Scissors to send embeds instead of messages.\nRemoved the word 'asshole' from member leaving message.\nFixed the Goodbye GIF sending to the wrong channel glitch"
         ,"12/16/20": "Added Rock-Paper-Scissors game (.s rps), .s eatburger, .s kill, .s 8ball, .s cointoss\nAdded .s warn for admins\nGoodbye message will now try to send to a text channel with goodbye in the name (if exists). Added gifs to hello/bye messages"
         ,"12/14/20": "**Added admin cog, with several new commands**\nShifted change log into a json file for ease of edit\nNot entering an argument for .s help defaults it to short\nUpdated `purge` command to not include command message, also sends message when completed\nAdded 2 aliases for 'insult' command"
         ,"12/13/20": "Added `changelog` command\nAdded role requirement for `reload` and `purge` commands"
