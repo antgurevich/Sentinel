@@ -30,10 +30,9 @@ class Games(commands.Cog):
             for emoji in fightEmojiList:
                 await duelMsg.add_reaction(emoji)
             
-            def action(reaction, player):
+            def check(reaction, player):
                 print (reaction, player)
-                print (self.bot.user)
-                if player!=self.bot.user and reaction=="🏃‍♂️":
+                if player!=self.bot.user: #and reaction=="🏃‍♂️":
                      #await ctx.send(player.mention+" pussied out! "+p1.mention+" wins the duel!")
                      print (player.mention+" pussied out! "+p1.mention+" wins the duel!")
                 else:
@@ -41,7 +40,7 @@ class Games(commands.Cog):
 
             try:
                 print (4)
-                response=await self.bot.wait_for("reaction_add",check=action,timeout=60.0)
+                response,_=await self.bot.wait_for("reaction_add",check=check,timeout=60.0)
                 
             except asyncio.TimeoutError:
                 return await ctx.send("Bruh, you took too long to respond. Imagine forfeiting :stuck_out_tongue_closed_eyes:")
@@ -60,8 +59,8 @@ class Games(commands.Cog):
     async def rps(self, ctx):
         rpsEmojis=["🌑", "📄", "✂"]
         
-        await ctx.send("So... you want to challenge me to rock paper scissors, huh?")
-        botMsg = await ctx.send("React to this message with your choice")
+        embed=discord.Embed(title=("So... you want to challenge me to rock paper scissors, huh?\nReact to this message with your choice"))
+        botMsg = await ctx.send(embed=embed)
         
         for emoji in rpsEmojis:
             await botMsg.add_reaction(emoji)
@@ -70,27 +69,29 @@ class Games(commands.Cog):
         #await ctx.send(bChoice)
         
         def rpsaction(reaction,user):
-            return user != self.bot.user and user == ctx.author and (str(reaction.emoji) == '🌑' or '📄' or '✂') 
+            return user != self.bot.user and user == ctx.author and (str(reaction.emoji) in rpsEmojis) #'🌑' or '📄' or '✂')            
         
         try:
             response,_ =await self.bot.wait_for("reaction_add",check=rpsaction,timeout=30)
             if response.emoji==bChoice:
-                await ctx.send("We tied! You got super lucky...:expressionless:")
+                resultsMsg=("We tied! You got super lucky...:expressionless:")
             elif response.emoji=="🌑":
                 if bChoice=="📄":
-                    resultsMsg=await ctx.send("LLLLL I chose paper, imagine losing :rofl:")
+                    resultsMsg=("LLLLL I chose paper, imagine losing :rofl:")
                 else:
-                    resultsMsg=await ctx.send("Oh... I chose scissors :fearful: You win I guess")
+                    resultsMsg=("Oh... I chose scissors :fearful: You win I guess")
             elif response.emoji=="📄":
                 if bChoice=="🌑":
-                    resultsMsg=await ctx.send("Oh... I chose rock :fearful: You win I guess")
+                    resultsMsg=("Oh... I chose rock :fearful: You win I guess")
                 else:
-                    resultsMsg=await ctx.send("LLLLL I chose scissors, imagine losing :rofl:")
+                    resultsMsg=("LLLLL I chose scissors, imagine losing :rofl:")
             else: #User chose scissors
                 if bChoice=="🌑":
-                    resultsMsg=await ctx.send("LLLLL I chose rock, imagine losing :rofl:")
+                    resultsMsg=("LLLLL I chose rock, imagine losing :rofl:")
                 else:
-                    resultsMsg=await ctx.send("Oh... I chose paper :fearful: You win I guess")
+                    resultsMsg=("Oh... I chose paper :fearful: You win I guess")
+            embed=discord.Embed(title=resultsMsg)
+            await ctx.send(embed=embed)
 
         except asyncio.TimeoutError:
             return await ctx.send("Thanks for taking so long, dipshit. I'm taking this as a win for me LLL")
