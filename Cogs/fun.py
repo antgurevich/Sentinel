@@ -28,7 +28,7 @@ class Fun(commands.Cog):
     async def eightBall(self, ctx, *, question=None):
         if question is None:
             await ctx.send("Uhh... are you going to ask a question?")
-        elif "commit suicide" in question or "kill myself" in question or "off myself" in question:
+        elif "commit suicide" in question or "kill myself" in question or "off myself" in question or "go die" in question:
             await ctx.send("Dude. Please, no. :/\n<https://suicidepreventionlifeline.org/>")
         else:
             choices=["Hell yea!", "Duh...", "Lmaooooooo\nNo","Probably better not to tell you..."
@@ -165,7 +165,8 @@ class Fun(commands.Cog):
                     ,"I don't know what makes you so stupid, but it really works."
                     ,"you're proof that god has a sense of humor."
                     ,"do you wanna lose ten pounds of ugly fat? Cut off your head."
-                    ,"If what you don't know can't hurt you, you're invulnerable."
+                    ,"if what you don't know can't hurt you, you're invulnerable."
+                    ,"whenever you join a group, you are the lowest common denominator."
                     ]
         if user:
             await ctx.send("Hey "+user.mention+", "+random.choice(insultList))
