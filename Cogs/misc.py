@@ -7,6 +7,24 @@ class Misc(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.Cog.listener()
+    async def on_message_delete(self, message):
+        global deletedMessage, deletedAuthor
+        print (message.author.id,self.bot.user.id)
+        if message.author.id!=self.bot.user.id:
+            deletedAuthor=message.author
+            #deletedAuthor=(f"<{deletedAuthor}>")
+            deletedMessage=message.content
+            print (deletedAuthor, deletedMessage)
+    @commands.command(name="yoink", aliases=["snipe","deleted"])
+    async def yoink(self, ctx):
+        embed=discord.Embed(color=discord.Color.orange())
+        embed.add_field(name="Imagine trying to delete a message",value=(deletedAuthor.mention+": "+deletedMessage))
+        await ctx.send(embed=embed)
+    @yoink.error
+    async def clear_error(self, ctx, error):
+        await ctx.send("No one deleted any messages!")
+###########################################################################
     @commands.command(name="changelog",aliases=["changes","updates"])
     async def changelog(self,ctx):
         logEmbed=discord.Embed(title="Sentinel Change Log",color=discord.Color.teal())
