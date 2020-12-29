@@ -13,9 +13,7 @@ class Misc(commands.Cog):
         print (message.author.id,self.bot.user.id)
         if message.author.id!=self.bot.user.id:
             deletedAuthor=message.author
-            #deletedAuthor=(f"<{deletedAuthor}>")
             deletedMessage=message.content
-            print (deletedAuthor, deletedMessage)
     @commands.command(name="yoink", aliases=["snipe","deleted"])
     async def yoink(self, ctx):
         embed=discord.Embed(color=discord.Color.orange())
