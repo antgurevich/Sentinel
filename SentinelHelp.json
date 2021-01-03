@@ -7,7 +7,7 @@
             "`rps`, **DISABLED:**`fight`"
         ,
         "Utility":
-            "`temp`, `weather`"
+            "`memcount`, `temp`, `weather`"
         ,
         "Miscellaneous":
             "`help`, `yoink`, `purge`, `reload`, `botinfo`, `changelog`"
@@ -32,7 +32,8 @@
             ,"fight    - **DISABLED** Starts a 'fight' with a tagged person:\n\t.s fight (@user)"
         ],
         "Utility Commands":[
-            "temp   - Converts a given fahrenheit or celsius amount to the other unit:\n\t.s temp (number) (f or c)"
+            "memcount   - Lists the amount of members & bots in the server\n\t.s memcount"
+            ,"temp   - Converts a given fahrenheit or celsius amount to the other unit:\n\t.s temp (number) (f or c)"
             ,"weather   - Prints current temperature and weather description of inputed city:\n\t.s weather (city)"
         ],
         "Miscellaneous Commands:":[
@@ -53,7 +54,8 @@
         ]
     },
     "changeLog":{
-        "12/28/20": "Added `.s yoink`"
+        "1/3/21": "Added `.s memcount`\nAdded a few insults to `.s insult`. "
+        ,"12/28/20": "Added `.s yoink`"
         ,"12/27/20":"Added `.s meme`, `.s weather`\nAdded more info to help guide\nFixed invalid user ping when user leaves server\nFixed `.s temp` to round to the nearest hundreth"
         ,"12/26/20": "**Added Utility Commands cog**\n*Current commands: temperature converter (`.s temp`)*\nModified Rock-Paper-Scissors to send embeds instead of messages.\nRemoved the word 'asshole' from member leaving message.\nFixed the Goodbye GIF sending to the wrong channel glitch"
         ,"12/16/20": "Added Rock-Paper-Scissors game (.s rps), .s eatburger, .s kill, .s 8ball, .s cointoss\nAdded .s warn for admins\nGoodbye message will now try to send to a text channel with goodbye in the name (if exists). Added gifs to hello/bye messages"
@@ -67,5 +69,6 @@
         ,"misc":""
         ,"mod":""
         ,"utility":""
+        ,"music":""
     }
 }
