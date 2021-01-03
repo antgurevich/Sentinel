@@ -8,6 +8,21 @@ class Utility(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.command(name="memcount", aliases=["members","membercount"])
+    async def memcount(self, ctx):
+        members=0
+        bots=0
+        for member in ctx.guild.members:
+            if member.bot:
+                bots+=1
+            else:
+                members+=1
+        embed=discord.Embed(title=str(ctx.guild), color=discord.Color.gold())
+        embed.set_thumbnail(url=ctx.guild.icon_url)
+        embed.add_field(name="Users",value=members)
+        embed.add_field(name="Bots",value=bots)
+        await ctx.send(embed=embed)
+###########################################################################
     @commands.command(name="weather")
     async def weather(self, ctx, city):
         try:
