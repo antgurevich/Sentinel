@@ -220,6 +220,7 @@ class Fun(commands.Cog):
                     ,"do you wanna lose ten pounds of ugly fat? Cut off your head."
                     ,"if what you don't know can't hurt you, you're invulnerable."
                     ,"whenever you join a group, you are the lowest common denominator."
+                    ,"damn are you a stimulus check? Cause you're not nearly enough."
                     ]
         if user:
             await ctx.send("Hey "+user.mention+", "+random.choice(insultList))
