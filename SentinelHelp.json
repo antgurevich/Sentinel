@@ -1,24 +1,25 @@
 {
     "short":{
         "Fun":
-            "`meme`, `insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`"
+            "`animal`,`meme`, `insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`"
         ,
         "Games":
             "`rps`, **DISABLED:**`fight`"
         ,
         "Utility":
-            "`memcount`, `temp`, `weather`"
+            "`covid`,`memcount`, `temp`, `weather`"
         ,
         "Miscellaneous":
             "`help`, `yoink`, `purge`, `reload`, `botinfo`, `changelog`"
         ,
         "Mod":
-            "`warn` ,`mute`, `unmute`, `kick`, `ban`, `unban`"
+            "`slowmode`,`lock`,`unlock`,`warn` ,`mute`, `unmute`, `kick`, `ban`, `unban`"
 
     },
     "full":{    
         "Fun Commands:":[
-            "meme   - Pulls a meme from reddit:\n\t.s meme [subreddit] [new/hot/controversial]"
+            "animal     - Displays an animal gif/photo from reddit\n\t.s animal"
+            ,"meme   - Pulls a meme from reddit:\n\t.s meme [subreddit] [new/hot/controversial]"
             ,"insult   - Insults a tagged user:\n\t.s insult (@user)"
             ,"compliment   - Compliments a tagged user:\n\t.s compliment (@user)"
             ,"hack  - `Hacks` a tagged user or word:\n\t.s hack (anything)"
@@ -32,7 +33,8 @@
             ,"fight    - **DISABLED** Starts a 'fight' with a tagged person:\n\t.s fight (@user)"
         ],
         "Utility Commands":[
-            "memcount   - Lists the amount of members & bots in the server\n\t.s memcount"
+            "covid      - Displays covid-19 statistics for either the world or individual countries\n\t.s covid (country)"
+            ,"memcount   - Lists the amount of members & bots in the server\n\t.s memcount"
             ,"temp   - Converts a given fahrenheit or celsius amount to the other unit:\n\t.s temp (number) (f or c)"
             ,"weather   - Prints current temperature and weather description of inputed city:\n\t.s weather (city)"
         ],
@@ -45,7 +47,10 @@
             ,"changelog - Displays changes made to Sentinel:\n\t.s changelog"
         ],
         "Mod Commands:":[
-            "warn   - Warns a user (requires `Kick Members` permissions):\n\t.s warn (@user) [reason`"
+            "slowmode   - Enables slowmode for the channel. Use 0 for seconds to disable slowmode\n\t.s slowmode (seconds)"
+            ,"lock   - Disables send_messages permissions for all non-admin users in the channel\n\t.s lock"
+            ,"unlock   - Enables send_messages permissions for all non-admin users in the channel\n\t.s unlock"
+            ,"warn   - Warns a user (requires `Kick Members` permissions):\n\t.s warn (@user) [reason]`"
             ,"mute   - Mutes a user (requires `Kick Members` permissions):\n\t.s mute (@user) [time]"
             ,"unmute    - Unmutes a muted user (requires `Kick Members` permissons):\n\t.s unmute (@user)"
             ,"kick  - Kicks user from the server (requires `Kick Members` permissons):\n\t.s kick (@user) [reason]"
@@ -54,7 +59,8 @@
         ]
     },
     "changeLog":{
-        "1/3/21": "Added `.s memcount`\nAdded a few insults to `.s insult`. "
+        "1/9/21": "Added `.s animal`, `.s covid`\nAdded `.s lock`, `.s unlock`, `.s slowmode` for admins"
+        ,"1/3/21": "Added `.s memcount`\nAdded a few insults to `.s insult`. "
         ,"12/28/20": "Added `.s yoink`"
         ,"12/27/20":"Added `.s meme`, `.s weather`\nAdded more info to help guide\nFixed invalid user ping when user leaves server\nFixed `.s temp` to round to the nearest hundreth"
         ,"12/26/20": "**Added Utility Commands cog**\n*Current commands: temperature converter (`.s temp`)*\nModified Rock-Paper-Scissors to send embeds instead of messages.\nRemoved the word 'asshole' from member leaving message.\nFixed the Goodbye GIF sending to the wrong channel glitch"
@@ -69,6 +75,5 @@
         ,"misc":""
         ,"mod":""
         ,"utility":""
-        ,"music":""
     }
 }
