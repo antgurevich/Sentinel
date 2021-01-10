@@ -6,6 +6,51 @@ class Mod(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.command(name="slowmode", aliases=["smode"])
+    @commands.has_permissions(manage_channels=True)
+    async def slowmode(self, ctx, time: int):
+        if time==0: #Disabled slowmode
+            await ctx.channel.edit(slowmode_delay=0)
+            await ctx.send("Slowmode disabled")
+        elif time<0 or time>21599: #Out of range
+            await ctx.send("You cannot set a time lower than 0 seconds or greater than 21599 seconds! 0 seconds disables slowmode")
+        else:
+            await ctx.channel.edit(slowmode_delay=time)
+            await ctx.send(f"Slowmode set to {time} seconds")
+    @slowmode.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error,commands.MissingPermissions):
+            await ctx.send("HA you don't have the proper perms to do that. What an L")
+        elif isinstance(error,commands.MissingRequiredArgument):
+            await ctx.send("Specify how many seconds the slowmode should be. Use 0 seconds to disable slowmode: `.s slowmode (seconds)`")
+        elif isinstance(error,commands.BadArgument):
+            await ctx.send("You must enter an integer: `.s slowmode (seconds)`")
+###########################################################################
+    @commands.command(name="lock")
+    @commands.has_permissions(manage_channels=True)
+    async def lock(self, ctx):
+        perms=ctx.channel.overwrites_for(ctx.guild.default_role)
+        perms.send_messages=False
+        await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms)
+        await ctx.send(f"**{ctx.channel}** locked to non-admin users")
+    @lock.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error,commands.MissingPermissions):
+            await ctx.send("You don't have perms to do that dummy")
+###########################################################################
+    @commands.command(name="unlock")
+    @commands.has_permissions(manage_channels=True)
+    async def unlock(self, ctx):
+        perms=ctx.channel.overwrites_for(ctx.guild.default_role)
+        perms.send_messages=True
+        await ctx.channel.set_permissions(ctx.guild.default_role, overwrite=perms)
+        await ctx.send(f"**{ctx.channel}** unlocked to non-admin users")
+    @unlock.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error,commands.MissingPermissions):
+            await ctx.send("You don't have perms to do that dummy")
+###########################################################################
+
     @commands.command(name="warn")
     @commands.has_permissions(kick_members=True)
     async def warn(self, ctx, user: discord.Member=None, *, reason=None):
