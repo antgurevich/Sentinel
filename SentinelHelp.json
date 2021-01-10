@@ -1,13 +1,13 @@
 {
     "short":{
         "Fun":
-            "`animal`,`meme`, `insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`"
+            "`animal`, `meme`, `insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`"
         ,
         "Games":
             "`rps`, **DISABLED:**`fight`"
         ,
         "Utility":
-            "`covid`,`memcount`, `temp`, `weather`"
+            "`covid`, `memcount`, `temp`, `weather`"
         ,
         "Miscellaneous":
             "`help`, `yoink`, `purge`, `reload`, `botinfo`, `changelog`"
@@ -17,49 +17,49 @@
 
     },
     "full":{    
-        "Fun Commands:":[
-            "animal     - Displays an animal gif/photo from reddit\n\t.s animal"
-            ,"meme   - Pulls a meme from reddit:\n\t.s meme [subreddit] [new/hot/controversial]"
-            ,"insult   - Insults a tagged user:\n\t.s insult (@user)"
-            ,"compliment   - Compliments a tagged user:\n\t.s compliment (@user)"
-            ,"hack  - `Hacks` a tagged user or word:\n\t.s hack (anything)"
-            ,"eatburger    - Eats a burger:\n\t.s eatburger"
-            ,"kill      - Kinda obvious isn't it?\n\t.s kill (@user)"
-            ,"8ball     - Ask a question for it to be answered!\n\t.s 8ball (question)"
-            ,"cointoss     - Flips a coin:\n\t.s cointoss"
-        ],
-        "Game Commands:":[
-            "rps    - Plays rock-paper-scissors with the bot:\n\t.s rps"
-            ,"fight    - **DISABLED** Starts a 'fight' with a tagged person:\n\t.s fight (@user)"
-        ],
-        "Utility Commands":[
-            "covid      - Displays covid-19 statistics for either the world or individual countries\n\t.s covid (country)"
-            ,"memcount   - Lists the amount of members & bots in the server\n\t.s memcount"
-            ,"temp   - Converts a given fahrenheit or celsius amount to the other unit:\n\t.s temp (number) (f or c)"
-            ,"weather   - Prints current temperature and weather description of inputed city:\n\t.s weather (city)"
-        ],
-        "Miscellaneous Commands:":[
-            "help   - Displays a help guide for Sentinel:\n\t.s help [-f]"
-            ,"yoink     - Retrieves the most recent deleted message and sends it\n\t.s yoink"
-            ,"purge   - Deletes x amount of messages in the text-channel (requires `Manage Message` permission):\n\t.s purge (number)"
-            ,"reload   - Attempts to reload either all cogs or a certain cog (requires `Admin` permissions):\n\t.s reload (cog)"
-            ,"botinfo   - Displays some information about Sentinel:\n\t.s botinfo"
-            ,"changelog - Displays changes made to Sentinel:\n\t.s changelog"
-        ],
-        "Mod Commands:":[
-            "slowmode   - Enables slowmode for the channel. Use 0 for seconds to disable slowmode\n\t.s slowmode (seconds)"
-            ,"lock   - Disables send_messages permissions for all non-admin users in the channel\n\t.s lock"
-            ,"unlock   - Enables send_messages permissions for all non-admin users in the channel\n\t.s unlock"
-            ,"warn   - Warns a user (requires `Kick Members` permissions):\n\t.s warn (@user) [reason]`"
-            ,"mute   - Mutes a user (requires `Kick Members` permissions):\n\t.s mute (@user) [time]"
-            ,"unmute    - Unmutes a muted user (requires `Kick Members` permissons):\n\t.s unmute (@user)"
-            ,"kick  - Kicks user from the server (requires `Kick Members` permissons):\n\t.s kick (@user) [reason]"
-            ,"ban   - Bans user from the server (requires `Ban Members` permissons):\n\t.s ban (@user) [reason]"
-            ,"unban    - Unbans a banned user from the server (requires `Ban Members` permissions):\n\t.s unban (username#tags)"
-        ]
+        "fun":{
+            ".s animal": "Displays an animal gif/photo from reddit"
+            ,".s meme [subreddit] [new/hot/controversial]": "Pulls a meme from reddit"
+            ,".s insult (@user)": "Insults a tagged user"
+            ,".s compliment (@user)": "Compliments a tagged user"
+            ,".s hack (anything)": "'Hacks' a tagged user or word"
+            ,".s eatburger": "Eats a burger"
+            ,".s kill (@user)": "Kinda obvious isn't it?"
+            ,".s 8ball (question)": "Ask a question for it to be answered"
+            ,".s cointoss": "Flips a coin"
+        },
+        "game":{
+            ".s rps": "Plays rock-paper-scissors with the bot"
+            ,".s fight (@user)": "**DISABLED** Starts a 'fight' with a tagged person"
+        },
+        "utility":{
+            ".s covid [country]": "Displays covid-19 statistics for either the world or individual countries"
+            ,".s memcount": "Lists the amount of members & bots in the server"
+            ,".s temp (number) (f or c)": "Converts a given fahrenheit or celsius amount to the other unit"
+            ,".s weather (city)": "Prints current temperature and weather description of inputed city"
+        },
+        "misc":{
+            ".s help [category]": "Displays a help guide for Sentinel"
+            ,".s yoink": "Retrieves the most recent deleted message and sends it"
+            ,".s purge (number)": "Deletes x amount of messages in the text-channel (requires `Manage Message` permission)"
+            ,".s reload (cog)": "Attempts to reload either all cogs or a certain cog (requires `Admin` permissions)"
+            ,".s botinfo": "Displays some information about Sentinel"
+            ,".s changelog": "Displays changes made to Sentinel"
+        },
+        "mod":{
+            ".s slowmode (seconds)": "Enables slowmode for the channel. Use 0 for seconds to disable slowmode"
+            ,".s lock": "Disables send_messages permissions for all non-admin users in the channel"
+            ,".s unlock": "Enables send_messages permissions for all non-admin users in the channel"
+            ,".s warn (@user) [reason]": "Warns a user (requires `Kick Members` permissions)"
+            ,".s mute (@user) [time]": "Mutes a user (requires `Kick Members` permissions)"
+            ,".s unmute (@user)": "Unmutes a muted user (requires `Kick Members` permissons)"
+            ,".s kick (@user) [reason]": "Kicks user from the server (requires `Kick Members` permissons)"
+            ,".s ban (@user) [reason]": "Bans user from the server (requires `Ban Members` permissons)"
+            ,".s unban (username#tags)": "Unbans a banned user from the server (requires `Ban Members` permissions)"
+        }
     },
     "changeLog":{
-        "1/9/21": "Added `.s animal`, `.s covid`\nAdded `.s lock`, `.s unlock`, `.s slowmode` for admins"
+        "1/6/21": "Added `.s animal`, `.s covid`\nAdded `.s lock`, `.s unlock`, `.s slowmode` for admins"
         ,"1/3/21": "Added `.s memcount`\nAdded a few insults to `.s insult`. "
         ,"12/28/20": "Added `.s yoink`"
         ,"12/27/20":"Added `.s meme`, `.s weather`\nAdded more info to help guide\nFixed invalid user ping when user leaves server\nFixed `.s temp` to round to the nearest hundreth"
@@ -75,5 +75,7 @@
         ,"misc":""
         ,"mod":""
         ,"utility":""
+        ,"music":""
+        ,"birthday":""
     }
 }
