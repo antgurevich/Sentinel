@@ -1,5 +1,6 @@
 import requests
 import json
+from covid import Covid
 from configparser import ConfigParser
 import discord
 from discord.ext import commands
@@ -7,6 +8,40 @@ from discord.ext import commands
 class Utility(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
+###########################################################################
+    @commands.command(name="covid", aliases=["corona","covid19","covid-19"])
+    async def covid(self, ctx, country=None):
+        covid=Covid(source="worldometers")
+        if country==None:
+            active=covid.get_total_active_cases()
+            confirmed = covid.get_total_confirmed_cases()
+            recovered = covid.get_total_recovered()
+            deaths = covid.get_total_deaths()
+            
+            embed=discord.Embed(title="Global COVID-19 Statistics")
+            embed.add_field(name="Active",value=active)
+            embed.add_field(name="Total Confirmed",value=confirmed)
+            embed.add_field(name="Total Recovered",value=recovered)
+            embed.add_field(name="Deaths",value=deaths)
+            
+        else:
+            cases=covid.get_status_by_country_name(country)
+            country=cases["country"]
+            embed=discord.Embed(title=(f"{country}'s COVID-19 Statistics"))
+            embed.add_field(name="Total Confirmed",value=cases["confirmed"])
+            embed.add_field(name="Active",value=cases["active"])
+            embed.add_field(name="New Cases",value=cases["new_cases"])
+            embed.add_field(name="Total Recovered",value=cases["recovered"])
+            embed.add_field(name="Tests Done", value=cases["total_tests"])
+            embed.add_field(name="New Deaths",value=cases["new_deaths"])
+            embed.add_field(name="Total Deaths",value=cases["deaths"])
+            
+        embed.set_thumbnail(url="https://th.bing.com/th/id/OIP.RGtM0GjHmD-h-2vbkxXo_wHaE8?pid=Api&rs=1")
+        await ctx.send(embed=embed)
+    
+    @covid.error
+    async def clear_error(self, ctx, error):
+        await ctx.send(embed=discord.Embed(title="Unknown country, are you sure you spelled it correctly?"))
 ###########################################################################
     @commands.command(name="memcount", aliases=["members","membercount"])
     async def memcount(self, ctx):
