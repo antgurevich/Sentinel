@@ -59,7 +59,8 @@
         }
     },
     "changeLog":{
-        "1/6/21": "Added `.s animal`, `.s covid`\nAdded `.s lock`, `.s unlock`, `.s slowmode` for admins"
+        "1/9/21": "Reworked how `.s help` works, made it more efficiently written and user-friendly.
+        ,"1/6/21": "Added `.s animal`, `.s covid`\nAdded `.s lock`, `.s unlock`, `.s slowmode` for admins"
         ,"1/3/21": "Added `.s memcount`\nAdded a few insults to `.s insult`. "
         ,"12/28/20": "Added `.s yoink`"
         ,"12/27/20":"Added `.s meme`, `.s weather`\nAdded more info to help guide\nFixed invalid user ping when user leaves server\nFixed `.s temp` to round to the nearest hundreth"
@@ -75,7 +76,5 @@
         ,"misc":""
         ,"mod":""
         ,"utility":""
-        ,"music":""
-        ,"birthday":""
     }
 }
