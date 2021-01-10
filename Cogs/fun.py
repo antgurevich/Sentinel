@@ -10,6 +10,41 @@ class Fun(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.command(name="animal", aliases=["pet","pets"])
+    async def animal(self, ctx):
+        try:
+            CLIENT_ID=os.environ["CLIENT_ID"]
+            CLIENT_SECRET=os.environ["CLIENT_SECRET"]
+            USERNAME=os.environ["USERNAME"]
+            PASSWORD=os.environ["PASSWORD"]
+            USER_AGENT=os.environ["USER_AGENT"]
+        except:
+            config_object=ConfigParser()
+            config_object.read("SentinelVariables.ini")
+            variables=config_object["variables"]
+            CLIENT_ID=variables["CLIENT_ID"]
+            CLIENT_SECRET=variables["CLIENT_SECRET"]
+            USERNAME=variables["USERNAME"]
+            PASSWORD=variables["PASSWORD"]
+            USER_AGENT=variables["USER_AGENT"]
+        
+        reddit=praw.Reddit(
+                        client_id=CLIENT_ID
+                        ,client_secret=CLIENT_SECRET
+                        ,username=USERNAME
+                        ,password=PASSWORD
+                        ,user_agent=USER_AGENT)
+       
+        subreddit=reddit.subreddit("aww").hot()
+        post=random.randint(1,10)
+        for i in range(0, post):
+            submission=next(x for x in subreddit if not x.stickied)
+        
+        embed=discord.Embed(title=submission.title)
+        embed.set_footer(text=("Posted by u/"+str(submission.author)))
+        embed.set_image(url=submission.url)
+        await ctx.send(embed=embed)
+###########################################################################
     @commands.command(name="meme", aliases=["reddit"])
     async def meme(self, ctx, sreddit=None, type=None):    
         try:
