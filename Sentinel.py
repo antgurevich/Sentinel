@@ -64,57 +64,49 @@ async def on_member_remove(member):
         embed.set_image(url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif")
         await sysChannel.send(embed=embed)
 ###########################################################################
-@bot.command(name="help") #Help messages
-async def help(ctx, arg: str=""):
-    helpEmbed=discord.Embed(title="Sentinel Prefix: **.s**\t\tKey: ()=required; []=optional",color=discord.Color.green())
-    helpEmbed.set_author(name="An Idiot's Guide to Sentinel")
-    helpEmbed.set_footer(text="Some moron named PureCache made me")
-
-    if arg.strip().lower()=="-f": #Full version
+@bot.command(name="help", aliases=["h","helpinfo"]) #Help messages
+async def help(ctx, type=None):
+    if type==None:
+        with open("SentinelHelp.json", "r") as helpFile:
+            data = json.load(helpFile)
+        data = data['short']
         
+        embed=discord.Embed(title="An Idiot's Guide to Sentinel\t\tPrefix: .s",color=discord.Color.green())
+        embed.set_author(name="Type `.s [category]` to see an in-depth guide for the inputed category")
+        embed.set_footer(text="Some moron named PureCache made me")
+        embed.add_field(name="Fun Commands",value=data["Fun"],inline=False)
+        embed.add_field(name="Game Commands",value=data["Games"],inline=False)
+        embed.add_field(name="Utility Commands",value=data["Utility"],inline=False)
+        embed.add_field(name="Miscellaneous Commands",value=data["Miscellaneous"],inline=False)
+        embed.add_field(name="Mod Commands",value=data["Mod"],inline=False)
+    
+    else:
         with open("SentinelHelp.json","r") as helpFile:
             data=json.load(helpFile)
         data=data["full"]
+        data=data[type.lower()]
+        embed=discord.Embed(title=(f"{type.lower()} commands:"),color=discord.Color.green())
+        embed.set_author(name=("Key: (required) [optional]"))
+        embed.set_footer(text="Some moron named PureCache made me")
 
         for key in data:
-            value=("\n".join(x for x in data[key]))
-            helpEmbed.add_field(name=key,value=f"```{value}```",inline=False)
+            embed.add_field(name=(f"`{key}`"),value=data[key],inline=False)
     
-    elif arg.strip().lower()=="-s": #Short version
-        with open("SentinelHelp.json", "r") as helpFile:
-            data = json.load(helpFile)
-        data = data['short']
-        for key in data:
-            helpEmbed.add_field(name=key, value=data[key], inline=False)
-    
-    else: #Defaults to short version
-        with open("SentinelHelp.json", "r") as helpFile:
-            data = json.load(helpFile)
-        data = data['short']
-        for key in data:
-            helpEmbed.add_field(name=key, value=data[key], inline=False)
-    
-    
-    try:
-        await ctx.send("So you decided to ask for help... well here it is ya' brat")
-        await ctx.send(embed=helpEmbed)
-    except Exception as error:
-        print (error)
+    await ctx.send(embed=embed)
 
 @help.error
 async def clear_error(ctx,error):
-    if isinstance(error,commands.MissingRequiredArgument):
-        await ctx.send(ctx.message.author.mention+", guess what? You typed it wrong *dipshit*, use *.s help -f* for an extensive guide or *.s help* for a short guide")
+    await ctx.send("This category does not exist! Make sure you spelled it correctly, use `.s help` to see a short list of all types")
 ###########################################################################
-'''@bot.event
+@bot.event #If user just types in '.s'
 async def on_message(message):
-    if message.author==bot.user: #Ensures bot doesn't respond to itself
+    if message.author==bot.user: #So bot doesn't respond to itself
         return
     
-    if message.content.startswith("hi"):
-        await message.channel.send("Hello @"+str(message.author.mention))
+    if message.content==".s":
+        await message.channel.send(f"Hello {message.author.mention}! Use `.s help` to learn more about me!")
 
-    await bot.process_commands(message) #Enables commands'''
+    await bot.process_commands(message) #Enables commands
 ###########################################################################
 try:
     conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
