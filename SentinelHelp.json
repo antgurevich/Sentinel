@@ -9,11 +9,14 @@
         "Utility":
             "`covid`, `memcount`, `temp`, `weather`"
         ,
+        "Roles":
+            "`createrole`, `deleterole`, `giverole`, `removerole`, `editrole`"    
+        ,
         "Miscellaneous":
             "`help`, `yoink`, `purge`, `reload`, `botinfo`, `changelog`"
         ,
         "Mod":
-            "`slowmode`,`lock`,`unlock`,`warn` ,`mute`, `unmute`, `kick`, `ban`, `unban`"
+            "`slowmode`, `lock`, `unlock`, `warn`, `mute`, `unmute`, `kick`, `ban`, `unban`"
 
     },
     "full":{    
@@ -38,6 +41,13 @@
             ,".s temp (number) (f or c)": "Converts a given fahrenheit or celsius amount to the other unit"
             ,".s weather (city)": "Prints current temperature and weather description of inputed city"
         },
+        "roles":{
+            ".s createrole (role name) [color-code]":"Creates a role in the guild. Color code must be in hex format without the # (i.e. 7289da) (Requires manage_roles permission)"
+            ,".s deleterole (role name)":"Deletes the role (Requires manage_roles permission)"
+            ,".s giverole (@user) (role name)":"Gives the user the inputed role (Requires manage_roles permission)"
+            ,".s removerole (@user) (role name)":"Removes the role from the user (Requires manage_roles permission)"
+            ,".s editrole (role name)":"Prompts to edit either the role's name or color (Requires manage_roles permission)"
+        },
         "misc":{
             ".s help [category]": "Displays a help guide for Sentinel"
             ,".s yoink": "Retrieves the most recent deleted message and sends it"
@@ -59,7 +69,8 @@
         }
     },
     "changeLog":{
-        "1/9/21": "Reworked how `.s help` works, made it more efficiently written and user-friendly\nEntering just `.s` will now send a message to help begin"
+        "1/13/21":"Added roles cog with several role commands (`.s help roles`). Database will be integrated within the next couples days"
+        ,"1/9/21": "Reworked how `.s help` works, made it more efficiently written and user-friendly\nEntering just `.s` will now send a message to help begin"
         ,"1/6/21": "Added `.s animal`, `.s covid`\nAdded `.s lock`, `.s unlock`, `.s slowmode` for admins"
         ,"1/3/21": "Added `.s memcount`\nAdded a few insults to `.s insult`. "
         ,"12/28/20": "Added `.s yoink`"
@@ -74,6 +85,7 @@
         "fun":""
         ,"games":""
         ,"misc":""
+        ,"roles":""
         ,"mod":""
         ,"utility":""
     }
