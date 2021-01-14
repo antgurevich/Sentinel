@@ -48,6 +48,9 @@ class Roles(commands.Cog):
     @commands.command(name="giverole")
     @commands.has_permissions(manage_roles=True)
     async def giverole(self, ctx, user: discord.Member, *, role: discord.Role):
+        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
+            await ctx.send("You cannot give a role to someone with a higher role than you!")
+            return
         try:
             if role not in user.roles:
                 await user.add_roles(role)
@@ -69,6 +72,9 @@ class Roles(commands.Cog):
     @commands.command(name="removerole")
     @commands.has_permissions(manage_roles=True)
     async def removerole(self, ctx, user: discord.Member, *, role: discord.Role):
+        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
+            await ctx.send("You cannot remove a role from someone with a higher role than you!")
+            return
         try:
             if role in user.roles:
                 await user.remove_roles(role)
