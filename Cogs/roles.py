@@ -78,7 +78,7 @@ class Roles(commands.Cog):
         except Exception as e:
             print (e)
 
-    @giverole.error
+    @removerole.error
     async def clear_error(self, ctx, error):
         if isinstance(error, commands.UserNotFound):
             await ctx.send("User not found!")
