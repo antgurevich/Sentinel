@@ -77,6 +77,7 @@ async def help(ctx, type=None):
         embed.add_field(name="Fun Commands",value=data["Fun"],inline=False)
         embed.add_field(name="Game Commands",value=data["Games"],inline=False)
         embed.add_field(name="Utility Commands",value=data["Utility"],inline=False)
+        embed.add_field(name="Roles Commands",value=data["Roles"],inline=False)
         embed.add_field(name="Miscellaneous Commands",value=data["Miscellaneous"],inline=False)
         embed.add_field(name="Mod Commands",value=data["Mod"],inline=False)
     
