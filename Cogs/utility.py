@@ -43,8 +43,8 @@ class Utility(commands.Cog):
     async def clear_error(self, ctx, error):
         await ctx.send(embed=discord.Embed(title="Unknown country, are you sure you spelled it correctly?"))
 ###########################################################################
-    @commands.command(name="memcount", aliases=["members","membercount"])
-    async def memcount(self, ctx):
+    @commands.command(name="serverinfo", aliases=["s-info","server_info","server","servinfo"])
+    async def serverinfo(self, ctx):
         members=0
         bots=0
         for member in ctx.guild.members:
@@ -52,10 +52,16 @@ class Utility(commands.Cog):
                 bots+=1
             else:
                 members+=1
+        
+        roleCount=0
+        for role in ctx.guild.roles:
+            roleCount+=1
+            
         embed=discord.Embed(title=str(ctx.guild), color=discord.Color.gold())
         embed.set_thumbnail(url=ctx.guild.icon_url)
         embed.add_field(name="Users",value=members)
         embed.add_field(name="Bots",value=bots)
+        embed.add_field(name="Roles",value=roleCount)
         await ctx.send(embed=embed)
 ###########################################################################
     @commands.command(name="weather")
@@ -82,7 +88,7 @@ class Utility(commands.Cog):
             tempC=round(currentTemperature-273.15,2) #Converts to celsius
             tempF=round(((9.0/5.0 * tempC) + 32),2)
             #currentPressure = main["pressure"] 
-            #currentHumidiy = main["humidity"] 
+            #currentHumidity = main["humidity"] 
             weather = responses["weather"] 
             weather_description = weather[0]["description"] 
 
