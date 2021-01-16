@@ -10,7 +10,7 @@
             "`covid`, `memcount`, `temp`, `weather`"
         ,
         "Roles":
-            "`createrole`, `deleterole`, `giverole`, `removerole`, `editrole`"    
+            "`createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `deleterequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
         ,
         "Miscellaneous":
             "`help`, `yoink`, `purge`, `reload`, `botinfo`, `changelog`"
@@ -37,13 +37,18 @@
         },
         "utility":{
             ".s covid [country]": "Displays covid-19 statistics for either the world or individual countries"
-            ,".s memcount": "Lists the amount of members & bots in the server"
+            ,".s serverinfo": "Lists information about the current server"
             ,".s temp (number) (f or c)": "Converts a given fahrenheit or celsius amount to the other unit"
             ,".s weather (city)": "Prints current temperature and weather description of inputed city"
         },
         "roles":{
+            
             ".s createrole (role name) [color-code]":"Creates a role in the guild. Color code must be in hex format without the # (i.e. 7289da) (Requires manage_roles permission)"
             ,".s deleterole (role name)":"Deletes the role (Requires manage_roles permission)"
+            ,".s fetchrequests": "Displays the next role request"
+            ,".s rolerequest (role name) [color-code]":"Creates a role request"
+            ,".s deleterequest [role name]":"Deletes the entered role request, if no name is entered, all your requests will be deleted"
+            ,".s exportreqs":"Sends a dm to the user with a list of upcoming role requests"
             ,".s giverole (@user) (role name)":"Gives the user the inputed role (Requires manage_roles permission)"
             ,".s removerole (@user) (role name)":"Removes the role from the user (Requires manage_roles permission)"
             ,".s editrole (role name)":"Prompts to edit either the role's name or color (Requires manage_roles permission)"
@@ -69,7 +74,8 @@
         }
     },
     "changeLog":{
-        "1/13/21":"Added roles cog with several role commands (`.s help roles`). Database will be integrated within the next couples days"
+        "1/15/21":"Added `.s rolerequest` and `.s deleterequest` for requesting rows, `.s fetchrequests` for displaying requests and `.s exportreqs` for sending request list\nChanged `.s memcount` to `.s serverinfo`, now has more info about the server in general\nFixed `.s createrole` command giving wrong error if server reached role limit."
+        ,"1/13/21":"Added roles cog with several role commands (`.s help roles`). Database will be integrated within the next couples days"
         ,"1/9/21": "Reworked how `.s help` works, made it more efficiently written and user-friendly\nEntering just `.s` will now send a message to help begin"
         ,"1/6/21": "Added `.s animal`, `.s covid`\nAdded `.s lock`, `.s unlock`, `.s slowmode` for admins"
         ,"1/3/21": "Added `.s memcount`\nAdded a few insults to `.s insult`. "
