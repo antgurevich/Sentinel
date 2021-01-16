@@ -1,10 +1,96 @@
-import discord
 import asyncio
+import psycopg2
+import os
+from configparser import ConfigParser
+import discord
 from discord.ext import commands
 
 class Roles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+###########################################################################
+    @commands.command(name="fetchrequests",aliases=["fetchreqs", "fetchreq", "fetchrequest"])
+    async def fetchrequests(self, ctx):
+        sql=("SELECT user_id, role_name, hex_color FROM role_requests WHERE server_id=%s LIMIT 1;")
+        cursor.execute(sql, (ctx.guild.id,))
+        conn.commit()
+        result=cursor.fetchone()
+        if result is None:
+            await ctx.send(embed=discord.Embed(title="No requests were found for this server!",color=discord.Color.red()))
+            return
+        embed=discord.Embed(title="Next Request:",color=discord.Color.gold())
+        embed.add_field(name="User",value=f"<@{result[0]}>")
+        embed.add_field(name="Role Name",value=f"{result[1]}")
+        embed.add_field(name="Hex Color Code",value=f"{result[2]}")
+        await ctx.send(embed=embed)
+###########################################################################
+    @commands.command(name="exportreqs",aliases=["exportrequests"])
+    @commands.has_permissions(manage_roles=True)
+    async def exportreqs(self, ctx):
+        sql=("SELECT user_id, role_name, hex_color FROM role_requests WHERE server_id=%s;")
+        cursor.execute(sql, (ctx.guild.id,))
+        conn.commit()
+        results=cursor.fetchall()
+        if results is None:
+            await ctx.send(embed=discord.Embed(title="No requests were found for this server!",color=discord.Color.red()))
+            return
+        
+        embed=discord.Embed(title="Role Request List",color=discord.Color.greyple())
+        count=0
+        for item in results:
+            embed.add_field(name="User",value=(f"<@{results[count][0]}>"))
+            embed.add_field(name="Role Name",value=results[count][1])
+            embed.add_field(name="Hex Code",value=results[count][2])
+            count+=1
+
+        await ctx.send(embed=discord.Embed(title="Role Requests dmed to you!",color=discord.Color.green()))
+        channel=await ctx.author.create_dm()
+        await channel.send(embed=embed)
+    
+    @exportreqs.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error,commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(title="You do not have the proper permissions to do this!",color=discord.Color.red()))
+###########################################################################
+    @commands.command(name="rolerequest",aliases=["rolereq","requestrole","addreq","createreq"])
+    async def rolerequest(self, ctx, name, colorCode=None):
+        sql=('''INSERT INTO role_requests(server_id, user_id, role_name, hex_color)
+                VALUES (%s, %s, %s, %s)''')
+        if colorCode is None:
+            colorCode="ffffff"
+        cursor.execute(sql,(ctx.guild.id,ctx.message.author.id, name, colorCode))
+        conn.commit()
+        await ctx.send(embed=discord.Embed(title="Request submitted! :slight_smile:",color=discord.Color.green()))
+    @rolerequest.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error,commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(title="You must supply a name for the role!",color=discord.Color.red()))
+###########################################################################
+    @commands.command(name="deleterequest",aliases=["delrolereq","delrolerequest","deleterolerequest","removerequest","removereq","deleterequests","removerequests"])
+    async def deleterequest(self, ctx, role=None): #id=None
+        #if id is None:
+        id=ctx.message.author.id
+        #else:
+        #    if ctx.guild.get_member(id) is None:
+        #        await ctx.send(embed=discord.Embed(title="This person is not in the server! Make sure to type their id correctly",color=discord.Color.red()))
+        #        return
+        if role is None:
+            sql=('''DELETE FROM role_requests
+                    WHERE (server_id=%s AND user_id=%s);''')
+            cursor.execute(sql,(ctx.guild.id, id))
+            conn.commit()
+            if cursor.rowcount==0:
+                await ctx.send(embed=discord.Embed(title="No requests were found!",color=discord.Color.red()))
+                return
+        else:
+            sql=('''DELETE FROM role_requests
+                    WHERE (server_id=%s AND user_id=%s AND role_name=%s);''')
+            cursor.execute(sql,(ctx.guild.id, id, role))
+            conn.commit()
+            if cursor.rowcount==0:
+                await ctx.send(embed=discord.Embed(title="No role was found with that name! Did you spell/capitalize it correctly?",color=discord.Color.red()))
+                return
+        await ctx.send(embed=discord.Embed(title="Request(s) successfully deleted",color=discord.Color.green()))
 ###########################################################################
     @commands.command(name="createrole", aliases=["addrole"])
     @commands.has_permissions(manage_roles=True)
@@ -17,9 +103,15 @@ class Roles(commands.Cog):
             else:
                 color=int("0xffffff", 0)
             await guild.create_role(name=name,color=discord.Color(color))
-            await ctx.send(":white_check_mark: Role successfully created")
+            await ctx.send(embed=discord.Embed(title=":white_check_mark: Role successfully created",color=discord.Color.green()))
         except Exception as e:
-            await ctx.send("Invalid color-color! Example: 7289da (Do **NOT** include the #!)")
+            roleCount=0
+            for role in ctx.guild.roles:
+                roleCount+=1
+            if roleCount==250:
+                await ctx.send(embed=discord.Embed(title="Role limt (250) reached! Clear some space before trying to make a new one", color=discord.Color.red()))
+            else:
+                await ctx.send(embed=discord.Embed(title="Invalid color-color! Example: 7289da (Do NOT include the #!)",color=discord.Color.red()))
     
     @createrole.error
     async def clear_error(self, ctx, error):
@@ -36,13 +128,13 @@ class Roles(commands.Cog):
                 await role.delete()
                 await ctx.send(embed=discord.Embed(title=f"Role '{role}' deleted",color=discord.Color.green()))
                 return
-        await ctx.send("Role does not exist! Make sure to spell it correctly")
+        await ctx.send(embed=discord.Embed(title="Role does not exist! Make sure to spell it correctly",color=discord.Color.red()))
 
     @deleterole.error
     async def clear_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send("You do not have permissions to manage roles!")
-        if isinstance(error, commands.MissingRequiredArgument):
+        elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send("You must supply a role to delete! Use *.s deleterole (role name)*")
 ###########################################################################
     @commands.command(name="giverole")
@@ -137,4 +229,17 @@ class Roles(commands.Cog):
             await ctx.send("Missing required argument! Use *.s editrole (role name)*")
 ###########################################################################
 def setup(bot):
+    global cursor, conn
+    try:
+        conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
+        cursor = conn.cursor()
+        print ("Roles Cog: Database connection established from environment")
+    except:
+        config_object=ConfigParser()
+        config_object.read("SentinelVariables.ini")
+        variables=config_object["variables"]
+        DATABASE_URL=variables["DATABASE_URL"]
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = conn.cursor()
+        print ("Roles Cog: Database connection established from .ini")
     bot.add_cog(Roles(bot))
