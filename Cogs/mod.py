@@ -59,15 +59,12 @@ class Mod(commands.Cog):
         elif (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
             await ctx.send("You are trying to warn someone who has a role higher or equal to yours! Smh my head")
         else:
-            #await ctx.message.channel.purge(limit=1)
             embed=discord.Embed(color=discord.Color.red())
             if reason:
                 await user.send(f"You have been warned in **{ctx.guild}** for **{reason}**")
-                #await ctx.send(f"You have been warned by {ctx.author.mention} for {reason}")
                 embed.add_field(name="Warning", value=(f"**User **{user.mention} has been warned by {ctx.author.mention} for **{reason}**"))
             else:
                 await user.send(f"You have been warned in **{ctx.guild}**")
-                #await ctx.send(f"You have been warned by {ctx.author.mention} for {reason}")
                 embed.add_field(name="Warning", value=(f"**User **{user.mention} has been warned by {ctx.author.mention}"))
             await ctx.send(embed=embed)
     @warn.error
@@ -132,9 +129,10 @@ class Mod(commands.Cog):
                         await asyncio.sleep(int(parsedTime) * 60)
                     elif timeUnit == "hour(s)":
                         await asyncio.sleep(int(parsedTime) * 3600)
-            
-                    await user.remove_roles(muteRole)
-                    await ctx.send(f"User {user.mention} has been unmuted after {parsedTime} {timeUnit}!")
+                    
+                    if muteRole in user.roles:
+                        await user.remove_roles(muteRole)
+                        await ctx.send(embed=discord.embed(title=f"User {user.mention} has been unmuted after {parsedTime} {timeUnit}!",color=discord.Color.red))
 
     @mute.error
     async def clear_error(self,ctx,error):
