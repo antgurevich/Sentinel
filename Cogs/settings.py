@@ -288,7 +288,7 @@ class Settings(commands.Cog):
         def check(reaction,user):
             return user != self.bot.user and user == ctx.author and (str(reaction.emoji) in reactEmojis)
 
-        reacteEmojis=["✔️","❌"]
+        reactEmojis=["✔️","❌"]
         for emoji in reactEmojis:
             await msg.add_reaction(emoji)
         
