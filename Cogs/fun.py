@@ -10,6 +10,19 @@ class Fun(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.command(name="rng",aliases=["randomnum","randnum","numgen"])
+    async def rng(self, ctx, start: int, end: int):
+        msg=await ctx.send(embed=discord.Embed(title="Generating random number... :arrows_counterclockwise:",color=discord.Color.dark_magenta()))
+        await asyncio.sleep(1)
+        await msg.edit(embed=discord.Embed(title=f"Your random number is {random.randint(start,end)}",color=discord.Color.green()))
+
+    @rng.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(title="Missing limits! Must be `.s rng (start number) (end number)`",color=discord.Color.red()))
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Invalid range! Must be whole numbers",color=discord.Color.red()))
+###########################################################################
     @commands.command(name="animal", aliases=["pet","pets"])
     async def animal(self, ctx):
         try:
