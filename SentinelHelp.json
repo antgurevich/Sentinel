@@ -1,7 +1,7 @@
 {
     "short":{
         "Fun":
-            "`animal`, `meme`, `insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`"
+            "`animal`, `meme`, `insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`, `rng`"
         ,
         "Games":
             "`rps`, **DISABLED:**`fight`"
@@ -17,6 +17,9 @@
         ,
         "Mod":
             "`slowmode`, `lock`, `unlock`, `warn`, `mute`, `unmute`, `kick`, `ban`, `unban`"
+        ,
+        "Settings":
+            "`setwelcomemsg`, `enablewelcomemsg`, `welcomepicture`, `setwelcomechannel`, `setleavemsg`, `enableleavemsg`, `leavepicture`, `leavepicture`"
 
     },
     "full":{    
@@ -30,6 +33,7 @@
             ,".s kill (@user)": "Kinda obvious isn't it?"
             ,".s 8ball (question)": "Ask a question for it to be answered"
             ,".s cointoss": "Flips a coin"
+            ,".s rng (start number) (end number)": "Generates a random number between the user-defined limits"
         },
         "game":{
             ".s rps": "Plays rock-paper-scissors with the bot"
@@ -44,15 +48,15 @@
         "roles":{
             
             ".s createrole (role name) [color-code]":"Creates a role in the guild. Color code must be in hex format without the # (i.e. 7289da) (Requires manage_roles permission)"
-            ,".s deleterole (role name)":"Deletes the role (Requires manage_roles permission)"
-            ,".s fetchrequests": "Displays the next role request"
-            ,".s rolerequest (role name) [color-code]":"Creates a role request"
-            ,".s resolverequest [@user] [role name]":"If no arguments are entered, deletes the next request in the list. If both arguments are entered, deletes that certain request (requires manage_roles permission)"
+            ,".s deleterole (role name)":"**DISABLED** Deletes the role (Requires `Manage Roles` permission)"
+            ,".s fetchrequests": "**DISABLED** Displays the next role request"
+            ,".s rolerequest (role name) [color-code]":"**DISABLED** Creates a role request"
+            ,".s resolverequest [@user] [role name]":"**DISABLED** If no arguments are entered, deletes the next request in the list. If both arguments are entered, deletes that certain request (Requires `Manage Roles` permission)"
             ,".s deleterequest [role name]":"Deletes the entered role request, if no name is entered, all your requests will be deleted"
-            ,".s exportreqs":"Sends a dm to the user with a list of upcoming role requests"
-            ,".s giverole (@user) (role name)":"Gives the user the inputed role (Requires manage_roles permission)"
-            ,".s removerole (@user) (role name)":"Removes the role from the user (Requires manage_roles permission)"
-            ,".s editrole (role name)":"Prompts to edit either the role's name or color (Requires manage_roles permission)"
+            ,".s exportreqs":"**DISABLED** Sends a dm to the user with a list of upcoming role requests"
+            ,".s giverole (@user) (role name)":"Gives the user the inputed role (Requires `Manage Roles` permission)"
+            ,".s removerole (@user) (role name)":"Removes the role from the user (Requires `Manage Roles` permission)"
+            ,".s editrole (role name)":"Prompts to edit either the role's name or color (Requires `Manage Roles` permission)"
         },
         "misc":{
             ".s help [category]": "Displays a help guide for Sentinel"
@@ -72,10 +76,22 @@
             ,".s kick (@user) [reason]": "Kicks user from the server (requires `Kick Members` permissons)"
             ,".s ban (@user) [reason]": "Bans user from the server (requires `Ban Members` permissons)"
             ,".s unban (username#tags)": "Unbans a banned user from the server (requires `Ban Members` permissions)"
+        },
+        "settings":{
+            ".s setwelcomemsg [message]": "Sets the bot message for when someone joins the server. Type %s where you want the user to be mentioned, or leave message blank to se to default (Requires `Manage Server` permission)"
+            ,".s enablewelcomemsg (True/False)": "Enables or disables the welcome message when someone joins server (Requires `Manage Server` permission)"
+            ,".s welcomepicture [url]": "Sets the welcome message picture/gif. Leave url blank to revert to default (Requires `Manage Server` permission)"
+            ,".s setwelcomechannel (channel)": "Sets the channel that you want user join messages set to. (Requires `Manage Server` permission)"
+            ,".s setleavemsg [message]": "Sets the bot message for when someone leaves the server. Type %s where you want the user to be mentioned, or leave message blank to se to default (Requires `Manage Server` permission)"
+            ,".s enableleavemsg (True/False)": "Enables or disables the leave message when someone leaves server (Requires `Manage Server` permission)"
+            ,".s leavepicture [url]": "Sets the leave message picture/gif. Leave url blank to revert to default (Requires `Manage Server` permission)"
+            ,".s setleavechannel (channel)": "Sets the channel that you want user leave messages set to. (Requires `Manage Server` permission)"
         }
     },
     "changeLog":{
-        "1/20/21":"Fixed unmuted message appearing when user was mannually unmuted"
+        "1/31/21":"**Added Saveable Settings**\nAdded several settings for welcome/goodbye message, `.s help Settings` to see available commands\nsAdded `.s rng`."
+        ,"1/29/21":"Disabled `fetchreq`, `exportreq`, `rolereq`, `resolvereq`, and `deletereq` for now for fixing."
+        ,"1/20/21":"Fixed unmuted message appearing when user was mannually unmuted"
         ,"1/15/21":"Added `.s rolerequest` and `.s deleterequest` for requesting rows, `.s fetchrequests` for displaying requests and `.s exportreqs` for sending request list\nChanged `.s memcount` to `.s serverinfo`, now has more info about the server in general\nFixed `.s createrole` command giving wrong error if server reached role limit."
         ,"1/13/21":"**Added roles cog with several role commands (`.s help roles`).** Database will be integrated within the next couples days"
         ,"1/9/21": "Reworked how `.s help` works, made it more efficiently written and user-friendly\nEntering just `.s` will now send a message to help begin"
@@ -97,5 +113,6 @@
         ,"mod":""
         ,"utility":""
         ,"owner":""
+        ,"settings":""
     }
 }
