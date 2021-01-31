@@ -41,28 +41,73 @@ async def on_guild_join(guild):
 ###########################################################################
 @bot.event #Sends a message when someone joins the server
 async def on_member_join(member):
-    sysChannel=member.guild.system_channel
-    if sysChannel:
-        await sysChannel.send("Well well well... look who joined... welcome to hell "+member.mention)
+    sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
+    cursor.execute(sql, (member.guild.id, "welcome_channel"))
+    result=cursor.fetchone()
+    if result is not None: #Custom channel
+        channel=member.guild.get_channel(int(result[0]))
+    else: #System channel
+        channel=member.guild.system_channel
+
+    sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
+    cursor.execute(sql, (member.guild.id,"welcome_status"))
+    result=cursor.fetchone()
+    
+    if result is None or result[0]=="True": #welcome_status does not exist or is true
+        sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
+        cursor.execute(sql, (member.guild.id,"welcome_msg"))
+        result=cursor.fetchone()
+        if result is None: #Custom welcome message does not exist
+            message="Well well well... look who joined... welcome to hell %s"
+        else: #Custom message does exist
+            message=result[0]
+        sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
+        cursor.execute(sql, (member.guild.id,"welcome_picture"))
+        result=cursor.fetchone()
+        if result is None: #default url
+            url="https://media.tenor.co/images/3ccff8c4b2443d93811eac9b2fd56f11/raw"
+        else: #Custom url for image
+            url=result[0]
+        
+        await channel.send(message %member.mention)
         embed=discord.Embed()
-        embed.set_image(url="https://media.tenor.co/images/3ccff8c4b2443d93811eac9b2fd56f11/raw")
-        await sysChannel.send(embed=embed)
+        embed.set_image(url=url)
+        await channel.send(embed=embed)
 ###########################################################################
 @bot.event #Sends a message when someone leaves the server
 async def on_member_remove(member):
-    embed=discord.Embed()
-    for channel in member.guild.text_channels:
-        if isinstance(channel, discord.TextChannel):
-            if "goodbye" in str(channel):
-                await channel.send("Adios **"+str(member)+"**... \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
-                embed.set_image(url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif")
-                await channel.send(embed=embed)
-                return
-    sysChannel=member.guild.system_channel
-    if sysChannel:
-        await sysChannel.send("Adios **"+str(member)+"**... \t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t")
-        embed.set_image(url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif")
-        await sysChannel.send(embed=embed)
+    sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
+    cursor.execute(sql, (member.guild.id, "leave_channel"))
+    result=cursor.fetchone()
+    if result is not None:
+        channel=member.guild.get_channel(int(result[0]))
+    else:
+        channel=member.guild.system_channel
+
+    sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
+    cursor.execute(sql, (member.guild.id,"leave_status"))
+    result=cursor.fetchone()
+    
+    if result is None or result[0]=="True": #welcome_status does not exist or is true
+        sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
+        cursor.execute(sql, (member.guild.id,"leave_msg"))
+        result=cursor.fetchone()
+        if result is None: #Custom welcome message does not exist
+            message="Adios %s..."
+        else: #Custom message does exist
+            message=result[0]
+        sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
+        cursor.execute(sql, (member.guild.id,"leave_picture"))
+        result=cursor.fetchone()
+        if result is None: #default url
+            url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif"
+        else: #Custom url for image
+            url=result[0]
+        
+        await channel.send(message %member.mention)
+        embed=discord.Embed()
+        embed.set_image(url=url)
+        await channel.send(embed=embed)
 ###########################################################################
 @bot.command(name="help", aliases=["h","helpinfo"]) #Help messages
 async def help(ctx, type=None):
@@ -80,6 +125,7 @@ async def help(ctx, type=None):
         embed.add_field(name="Roles Commands",value=data["Roles"],inline=False)
         embed.add_field(name="Miscellaneous Commands",value=data["Miscellaneous"],inline=False)
         embed.add_field(name="Mod Commands",value=data["Mod"],inline=False)
+        embed.add_field(name="Settings Commands",value=data["Settings"],inline=False)
     
     else:
         with open("SentinelHelp.json","r") as helpFile:
@@ -111,6 +157,7 @@ async def on_message(message):
 ###########################################################################
 try:
     conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
+    cursor=conn.cursor()
     print ("Database connection established from environment")
 except:
     config_object=ConfigParser()
@@ -118,6 +165,7 @@ except:
     variables=config_object["variables"]
     DATABASE_URL=variables["DATABASE_URL"]
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor=conn.cursor()
     print ("Database connection established from .ini")
 try:
     bot.run(os.environ["DISCORDTOKEN"])
