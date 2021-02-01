@@ -103,8 +103,9 @@ async def on_member_remove(member):
             url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif"
         else: #Custom url for image
             url=result[0]
-        
-        await channel.send(message %member[:-4])
+        member=str(member)
+        member=member[:-4]
+        await channel.send(message %member)
         embed=discord.Embed()
         embed.set_image(url=url)
         await channel.send(embed=embed)
