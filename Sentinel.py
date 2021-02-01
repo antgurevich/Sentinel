@@ -104,7 +104,7 @@ async def on_member_remove(member):
         else: #Custom url for image
             url=result[0]
         member=str(member)
-        member=member[:-4]
+        member=member[:-5]
         await channel.send(message %member)
         embed=discord.Embed()
         embed.set_image(url=url)
