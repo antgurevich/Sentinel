@@ -89,7 +89,7 @@
         }
     },
     "changeLog":{
-        "2/1/21": "Changed all admin commands messages to embeds\nAdded several generic error messages"
+        "2/1/21": "Changed all admin commands messages to embeds\nAdded random statuses to bot\nAdded several generic error messages"
         ,"1/31/21":"**Added Saveable Settings**\nAdded several settings for welcome/goodbye message, `.s help Settings` to see available commands\nsAdded `.s rng`."
         ,"1/29/21":"Disabled `fetchreq`, `exportreq`, `rolereq`, `resolvereq`, and `deletereq` for now for fixing."
         ,"1/20/21":"Fixed unmuted message appearing when user was manually unmuted"
