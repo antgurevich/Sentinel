@@ -156,6 +156,15 @@ async def on_message(message):
 
     await bot.process_commands(message) #Enables commands
 ###########################################################################
+@bot.event #Generic error handling
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send(embed=discord.Embed(title="Command not found! Use `.s help` for a list of all commands"))
+    elif isinstance(error, commands.BotMissingPermissions):
+        await ctx.send(embed=discord.Embed(title="I do not have permission to do that! Try enabling the proper permissions for me and trying again"))
+    elif isinstance(error, commands.NoPrivateMessage):
+        await ctx.send(embed=discord.Embed(title="This command is only available in servers!"))
+###########################################################################
 try:
     conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
     cursor=conn.cursor()
