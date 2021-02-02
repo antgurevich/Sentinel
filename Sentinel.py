@@ -1,5 +1,6 @@
 import psycopg2
 import json
+import random
 from configparser import ConfigParser
 import os
 import discord
@@ -27,17 +28,32 @@ async def on_ready():
         except Exception as e:
             print ("Error loading",cog,"e:",e)
 
-    await bot.change_presence(activity=discord.Game(name="with Cache's emotions"))
+    randNum=random.randint(1,4)
+    if randNum==1:
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Cache be a Moron"))
+    elif randNum==2:
+        await bot.change_presence(activity=discord.Game("Cache's Emotions"))
+    elif randNum==3:
+        await bot.change_presence(activity=discord.Streaming(name="Idiot Simulator", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"))
+    else:
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="to Cache's bullshit"))
     print (bot.user.name,"successfully connected to Discord")
 ###########################################################################
 @bot.event #Sends message when bot joins server
 async def on_guild_join(guild):
     sysChannel=guild.system_channel
+    
+    sql=("SELECT guild_id, reason FROM banned_guilds WHERE guild_id=%s;")
+    cursor.execute(sql, (guild.id,))
+    result=cursor.fetchone()
+    if result[0]==guild.id:
+        await sysChannel.send(embed=discord.Embed(title=f"This server was blacklisted from the bot! Reason: {result[1]}. Contact PureCache#0001 for an appeal"))
+        guild=bot.get_guild(guild.id)
+        await guild.leave()
+        return
+    
     if sysChannel:
-        try:
-            await sysChannel.send("Sup bitches, i'm here to fuck shit up... since y'all are uneducated, type *.s help* to learn some stuff about me... if you dare :expressionless:")
-        except Exception as error:
-            print (error)
+        await sysChannel.send(embed=discord.Embed(title="Sup nerds... type *.s help* to learn some stuff about me... if you dare :expressionless:"))
 ###########################################################################
 @bot.event #Sends a message when someone joins the server
 async def on_member_join(member):
@@ -144,7 +160,7 @@ async def help(ctx, type=None):
 
 @help.error
 async def clear_error(ctx,error):
-    await ctx.send("This category does not exist! Make sure you spelled it correctly, use `.s help` to see a short list of all types")
+    await ctx.send(embed=discord.Embed(title="This category does not exist! Make sure you spelled it correctly, use `.s help` to see a short list of all types"))
 ###########################################################################
 @bot.event #If user just types in '.s'
 async def on_message(message):
@@ -152,7 +168,7 @@ async def on_message(message):
         return
     
     if message.content==".s":
-        await message.channel.send(f"Hello {message.author.mention}! Use `.s help` to learn more about me!")
+        await message.channel.send(embed=discord.Embed(title=f"Hello {message.author.mention}! Use `.s help` to learn more about me!"))
 
     await bot.process_commands(message) #Enables commands
 ###########################################################################
