@@ -11,11 +11,7 @@ class Roles(commands.Cog):
 ###########################################################################
     @commands.command(name="fetchrequests",aliases=["fetchreqs", "fetchreq", "fetchrequest"])
     async def fetchrequests(self, ctx):
-        
-        await ctx.send(embed=discord.Embed(title="Currently disabled"))
-        return
-        
-        sql=("SELECT user_id, role_name, color FROM role_requests WHERE server_id=%s LIMIT 1;")
+        sql=("SELECT row_id, user_id, role_name, color FROM role_requests WHERE server_id=%s LIMIT 1;")
         cursor.execute(sql, (ctx.guild.id,))
         conn.commit()
         result=cursor.fetchone()
@@ -23,37 +19,36 @@ class Roles(commands.Cog):
             await ctx.send(embed=discord.Embed(title="No requests were found for this server!",color=discord.Color.red()))
             return
         embed=discord.Embed(title="Next Request:",color=discord.Color.gold())
-        embed.add_field(name="User",value=f"<@{result[0]}>")
-        embed.add_field(name="Role Name",value=f"{result[1]}")
-        embed.add_field(name="Color",value=f"{result[2]}")
+        embed.add_field(name="ID",value=result[0])
+        embed.add_field(name="User",value=f"<@{result[1]}>")
+        embed.add_field(name="Role Name",value=result[2])
+        embed.add_field(name="Color",value=result[3])
         await ctx.send(embed=embed)
 ###########################################################################
     @commands.command(name="exportreqs",aliases=["exportrequests"])
     @commands.has_permissions(manage_roles=True)
     async def exportreqs(self, ctx):
         
-        await ctx.send(embed=discord.Embed(title="Currently disabled"))
-        return
-        
-        sql=("SELECT user_id, role_name, color FROM role_requests WHERE server_id=%s;")
+        sql=("SELECT row_id, user_id, role_name, color FROM role_requests WHERE server_id=%s;")
         cursor.execute(sql, (ctx.guild.id,))
         conn.commit()
         results=cursor.fetchall()
-        if results is None:
+        if results is None: #No requests for the server
             await ctx.send(embed=discord.Embed(title="No requests were found for this server!",color=discord.Color.red()))
             return
         
         embed=discord.Embed(title="Role Request List",color=discord.Color.greyple())
         count=0
         for item in results:
-            embed.add_field(name="User",value=(f"<@{results[count][0]}>"))
-            embed.add_field(name="Role Name",value=results[count][1])
-            embed.add_field(name="Color",value=results[count][2])
+            embed.add_field(name="ID",value=results[count][0])
+            embed.add_field(name="User",value=(f"<@{results[count][1]}>"))
+            embed.add_field(name="Role",value=results[count][2])
+            embed.add_field(name="Color",value=results[count][3], inline=False)
             count+=1
 
         await ctx.send(embed=discord.Embed(title="Role Requests dmed to you!",color=discord.Color.green()))
         channel=await ctx.author.create_dm()
-        await channel.send(embed=embed)
+        await channel.send(embed=embed) #Sends dm with requests
     
     @exportreqs.error
     async def clear_error(self, ctx, error):
@@ -61,29 +56,25 @@ class Roles(commands.Cog):
             await ctx.send(embed=discord.Embed(title="You do not have the proper permissions to do this!",color=discord.Color.red()))
 ###########################################################################
     @commands.command(name="rolerequest",aliases=["rolereq","requestrole","addreq","createreq"])
-    @commands.cooldown(1, 60, commands.BucketType.user)
-    async def rolerequest(self, ctx, name, colorCode=None):
-        
-        await ctx.send(embed=discord.Embed(title="Currently disabled"))
-        return
-        
-        
+    #@commands.cooldown(1, 60, commands.BucketType.user)
+    async def rolerequest(self, ctx, name, color=None):
+        #Makes sure that user isn't submitting multiple requests for the same thing
         try:
             sql=('''SELECT * FROM role_requests WHERE (server_id=%s AND user_id=%s AND role_name=%s)''')
             cursor.execute(sql,(ctx.guild.id,ctx.message.author.id,name))
         except Exception as e:
             print (e)
-        test=len(cursor.fetchall())
-        print (test)
-        if test>0:
+        results=len(cursor.fetchall())
+        if results>0:
             await ctx.send(embed=discord.Embed(title="You cannot submit multiple requests for the same role :/",color=discord.Color.orange()))
             return
 
+        #Creates request in db
         sql=('''INSERT INTO role_requests(server_id, user_id, role_name, color)
-                VALUES (%s, %s, %s, %s)''')
-        if colorCode is None:
-            colorCode="ffffff"
-        cursor.execute(sql,(ctx.guild.id,ctx.message.author.id, name, colorCode))
+            VALUES (%s, %s, %s, %s)''')
+        if color is None: #Makes color value default to clear
+            color="ffffff"
+        cursor.execute(sql,(ctx.guild.id,ctx.message.author.id, name, color))
         conn.commit()
         await ctx.send(embed=discord.Embed(title="Request submitted! :slight_smile:",color=discord.Color.green()))
     
@@ -94,73 +85,28 @@ class Roles(commands.Cog):
         elif isinstance(error,commands.CommandOnCooldown):
             await ctx.send(embed=discord.Embed(title="You are currently on cooldown!"))
 ###########################################################################
-    @commands.command(name="resolverequest",aliases=["resolvereq"])
+    @commands.command(name="resolverequest",aliases=["resolvereq", "deleterequest", "removerequest","removereq", "delrequest"])
     @commands.has_permissions(manage_roles=True)
-    async def resolverequest(self, ctx, user: discord.Member=None, role=None):
-        
-        await ctx.send(embed=discord.Embed(title="Currently disabled"))
-        return
-        
-        if (user is not None and role is None) or (user is None and role is not None):
-            await ctx.send(embed=discord.Embed(title="You must supply either both parameters or neither! Use `.s resolverequest [@user] [role name]`",color=discord.Color.red()))
-            return
-        elif user is None and role is None:
-            try:
-                sql=('''DELETE FROM role_requests
-                    WHERE server_id=%s
-                    LIMIT 1;''')
-                cursor.execute(sql, (ctx.guild.id,))
-                conn.commit()
-                await ctx.send(embed=discord.Embed(title="Request Resolved :D",color=discord.Color.green()))
-            except Exception as e:
-                print(e)
-        else:
-            id=user.id
-            if ctx.guild.get_member(id) is None:
-                await ctx.send(embed=discord.Embed(title="This person is not in the server!",color=discord.Color.red()))
+    async def resolverequest(self, ctx, role_id: int):
+        try:
+            sql=('''SELECT * FROM role_requests WHERE (server_id=%s AND row_id=%s)''')
+            cursor.execute(sql, (ctx.guild.id, role_id))
+            if cursor.fetchone() is None:
+                await ctx.send(embed=discord.Embed(title="Role ID not found!"))
                 return
-            try:
-                sql=('''DELETE FROM role_requests
-                        WHERE (server_id=%s AND user_id=%s AND role_name=%s)
-                        LIMIT 1''')
-                cursor.execute(sql, (ctx.guild.id, id, role))
-                conn.commit()
-            except Exception as e:
-                print (e)
-            if cursor.rowcount==0:
-                await ctx.send(embed=discord.Embed(title="No matching requests were found! Make sure to spell/capitalize the role name exactly as the requester did",color=discord.Color.red()))
-            else:
-                await ctx.send(embed=discord.Embed(title="Request Resolved :D",color=discord.Color.green()))
+            
+            sql=('''DELETE FROM role_requests
+                WHERE (server_id=%s AND row_id=%s)''')
+            cursor.execute(sql, (ctx.guild.id,role_id))
+            conn.commit()
+            await ctx.send(embed=discord.Embed(title="Request Resolved :D",color=discord.Color.green()))
+        except Exception as e:
+            print(e)
     
     @resolverequest.error
     async def clear_error(self, ctx, error):
-        if isinstance(error,commands.UserNotFound):
-            await ctx.send(embed=discord.Embed(title="This person is not in the server!",color=discord.Color.red()))
-###########################################################################
-    @commands.command(name="deleterequest",aliases=["delrolereq","delrolerequest","deleterolerequest","removerequest","removereq","deleterequests","removerequests"])
-    async def deleterequest(self, ctx, role=None):
-        
-        await ctx.send(embed=discord.Embed(title="Currently disabled"))
-        return
-        
-        id=ctx.message.author.id 
-        if role is None:
-            sql=('''DELETE FROM role_requests
-                    WHERE (server_id=%s AND user_id=%s);''')
-            cursor.execute(sql,(ctx.guild.id, id))
-            conn.commit()
-            if cursor.rowcount==0:
-                await ctx.send(embed=discord.Embed(title="No requests were found!",color=discord.Color.red()))
-                return
-        else:
-            sql=('''DELETE FROM role_requests
-                    WHERE (server_id=%s AND user_id=%s AND role_name=%s);''')
-            cursor.execute(sql,(ctx.guild.id, id, role))
-            conn.commit()
-            if cursor.rowcount==0:
-                await ctx.send(embed=discord.Embed(title="No role was found with that name! Did you spell/capitalize it correctly?",color=discord.Color.red()))
-                return
-        await ctx.send(embed=discord.Embed(title="Request(s) successfully deleted",color=discord.Color.green()))
+        if isinstance(error,commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Must specify a role ID to delete!\nUse `.s exportreqs` and then `.s resolverequest (role_id)`",color=discord.Color.red()))
 ###########################################################################
     @commands.command(name="createrole")
     @commands.has_permissions(manage_roles=True)
