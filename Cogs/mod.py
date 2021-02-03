@@ -114,7 +114,8 @@ class Mod(commands.Cog):
     @commands.command(name="warn")
     @commands.has_permissions(kick_members=True)
     async def warn(self, ctx, user: discord.Member, *, reason=None):
-        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
+        exceptions=[805830355290161153]#Smth
+        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id) and (user.top_role.id not in exceptions):
             await ctx.send(embed=discord.Embed(title="You are trying to warn someone who has a role higher or equal to yours! Smh my head"))
         else:
             embed=discord.Embed(color=discord.Color.red())
@@ -142,7 +143,8 @@ class Mod(commands.Cog):
     @commands.command(name="mute")
     @commands.has_permissions(kick_members=True)
     async def mute(self,ctx, user: discord.Member, time: str = None):
-        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
+        exceptions=[805830355290161153]#Smth
+        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id) and (user.top_role.id not in exceptions):
             await ctx.send(embed=discord.Embed(title="You are trying to mute someone who has a role higher or equal to yours! Smh my head",color=discord.Color.red()))
         else:
             guild=ctx.guild
@@ -212,9 +214,8 @@ class Mod(commands.Cog):
     @commands.command(name="unmute")
     @commands.has_permissions(kick_members=True)
     async def unmute(self, ctx, user: discord.Member):
-        if user is None:
-            await ctx.send(embed=discord.Embed(title="Who am I unmuting? You gotta tell me who, use `.s unmute @username`"))
-        elif ctx.author.top_role.position <= user.top_role.position and ctx.guild.owner.id != ctx.author.id:
+        exceptions=[805830355290161153]#Smth
+        if ctx.author.top_role.position <= user.top_role.position and ctx.guild.owner.id != ctx.author.id and user.top_role.id not in exceptions:
             await ctx.send(embed=discord.Embed(title="Can't unmute someone who has the same or higher role than yours!!"))
         else:
             guild = ctx.guild
@@ -228,7 +229,6 @@ class Mod(commands.Cog):
             if muteRole in user.roles:
                 await user.remove_roles(muteRole)
                 await ctx.send(embed=discord.Embed(title=f"{user} has been unmuted! Now we have to listen to their shit again..."))
-
             else:
                 await ctx.send("This user was never muted.")
     
@@ -238,6 +238,9 @@ class Mod(commands.Cog):
             await ctx.send(embed=discord.Embed(title="You can't unmute people dipshit, you don't have permission."))
         elif isinstance(error, commands.BadArgument) or isinstance(error, commands.UserNotFound):
             await ctx.send(embed=discord.Embed(title="Invalid user! Use `.s unmute (@username)`"))
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(title="Who am I unmuting? You gotta tell me who, use `.s unmute @username`"))
+
 ###########################################################################
     @commands.command(name="kick")
     @commands.has_permissions(kick_members=True)
@@ -265,7 +268,8 @@ class Mod(commands.Cog):
     @commands.command(name="ban")
     @commands.has_permissions(ban_members=True)
     async def ban(self,ctx, user: discord.Member, *, reason=None):
-        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
+        exceptions=[805830355290161153]#Smth
+        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id) and (user.top_role.id not in exceptions):
             await ctx.send(embed=discord.Embed(title="You are trying to ban someone who has a role higher or equal to yours! Smh my head"))
         else:
             await ctx.guild.ban(user, reason=reason)
@@ -281,7 +285,7 @@ class Mod(commands.Cog):
         if isinstance(error,commands.MissingPermissions):
             await ctx.send(embed=discord.Embed(title="HA LOOK AT THIS LOSER, doesn't even have permission to ban people. Imagine not being a mod, yikes"))
         elif isinstance(error,commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(embed=discord.Embed(title="You have to tag the user you want to ban. Use *.s ban @username [reason]* you shmuck"))
+            await ctx.send(embed=discord.Embed(title="You have to tag the user you want to ban. Use `.s ban @username [reason]` you shmuck"))
 ###########################################################################
     @commands.command(name="unban")
     @commands.has_guild_permissions(ban_members=True)
@@ -306,14 +310,14 @@ class Mod(commands.Cog):
         if isinstance(error,commands.MissingPermissions):
             await ctx.send(embed=discord.Embed(title="If you don't have perms to ban people... why would you think you can unban them?"))
         elif isinstance(error,commands.BadArgument) or isinstance(error, commands.UserNotFound) or isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(embed=discord.Embed(title="You did it wrong 4head, use *.s unban username#tags*"))
+            await ctx.send(embed=discord.Embed(title="You did it wrong 4head, use `.s unban username#tags`"))
 ###########################################################################
 def setup(bot):
     global cursor, conn
     try:
         conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
         cursor = conn.cursor()
-        print ("Settings Cog: Database connection established from environment")
+        print ("Mod Cog: Database connection established from environment")
     except:
         config_object=ConfigParser()
         config_object.read("SentinelVariables.ini")
@@ -321,5 +325,5 @@ def setup(bot):
         DATABASE_URL=variables["DATABASE_URL"]
         conn = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = conn.cursor()
-        print ("Settings Cog: Database connection established from .ini")
+        print ("Mod Cog: Database connection established from .ini")
     bot.add_cog(Mod(bot))
