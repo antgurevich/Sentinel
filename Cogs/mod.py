@@ -1,4 +1,7 @@
 import asyncio
+import psycopg2
+import os
+from configparser import ConfigParser
 import discord
 from discord.ext import commands
 
@@ -51,6 +54,63 @@ class Mod(commands.Cog):
         if isinstance(error,commands.MissingPermissions):
             await ctx.send(embed=discord.Embed(title="You don't have perms to do that dummy"))
 ###########################################################################
+    @commands.command(name="warnlist",aliases=["listwarns"])
+    @commands.has_permissions(kick_members=True)
+    async def warnlist(self, ctx, user: discord.Member):
+        try:
+            sql=('''SELECT row_id, reason FROM warning_history WHERE (guild_id=%s AND user_id=%s);''')
+            cursor.execute(sql, (ctx.guild.id, user.id))
+            results=cursor.fetchall()
+        except Exception as e:
+            print (e)
+        embed=discord.Embed(title=f"{user}'s Warning History:",color=discord.Color.dark_blue())
+        x=0
+        for warn in results:
+            embed.add_field(name=f"{x+1})  Warn ID: {results[x][0]}",value=f"Reason: {results[x][1]}")
+            x+=1
+        await ctx.send(embed=embed)
+
+    @warnlist.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(embed=discord.Embed(title="You do not have the `Kick Members` permission!"))
+        elif isinstance(error, commands.UserNotFound):
+            await ctx.send(embed=discord.Embed(title="Could not find this user! Make sure to ping them correctly"))
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect argument type! Use `.s warnlist (@user)`"))
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(title="Enter the person you want to list the warns of! Use `.s warnlist (@user)`"))
+###########################################################################
+    @commands.command(name="unwarn", aliases=["clearwarn","delwarn","removewarn","deletewarn"])
+    @commands.has_permissions(kick_members=True)
+    async def unwarn(self, ctx, user: discord.Member, id: int):
+        try:
+            sql=('''SELECT * FROM warning_history WHERE (guild_id=%s AND user_id=%s AND row_id=%s);''')
+            cursor.execute(sql, (ctx.guild.id, user.id,id))
+            results=cursor.fetchone()
+            if results is None:
+                await ctx.send(embed=discord.Embed(title="Warning ID not found! Use `.s warnlist (@user)` to select the right ID!"))
+                return
+                
+            sql=('''DELETE FROM warning_history WHERE (guild_id=%s AND user_id=%s AND row_id=%s);''')
+            cursor.execute(sql, (ctx.guild.id, user.id,id))
+            conn.commit
+           
+        except Exception as e:
+            print (e)
+        await ctx.send(embed=discord.Embed(title="Warning successfully deleted!"))
+
+    @unwarn.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(embed=discord.Embed(title="You do not have the `Kick Members` permission!"))
+        elif isinstance(error, commands.UserNotFound):
+            await ctx.send(embed=discord.Embed(title="Could not find this user! Make sure to ping them correctly"))
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect argument type! Use `.s unwarn (@user) (warn ID)`"))
+        elif isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(title="Enter the person you want to unwarn & warning ID!\nUse `.s warnlist (@user)` to find the IDs, and then `.s unwarn (@user) (warn ID)`"))
+###########################################################################
     @commands.command(name="warn")
     @commands.has_permissions(kick_members=True)
     async def warn(self, ctx, user: discord.Member, *, reason=None):
@@ -64,6 +124,10 @@ class Mod(commands.Cog):
             else:
                 await user.send(embed=discord.Embed(title=f"You have been warned in **{ctx.guild}**"))
                 embed.add_field(name="Warning", value=(f"**User **{user.mention} has been warned by {ctx.author.mention}"))
+            sql=('''INSERT INTO warning_history(guild_id, user_id, reason)
+                    VALUES (%s, %s, %s)''')
+            cursor.execute(sql, (ctx.guild.id,user.id, reason))
+            conn.commit()
             await ctx.send(embed=embed)
     
     @warn.error
@@ -245,4 +309,17 @@ class Mod(commands.Cog):
             await ctx.send(embed=discord.Embed(title="You did it wrong 4head, use *.s unban username#tags*"))
 ###########################################################################
 def setup(bot):
+    global cursor, conn
+    try:
+        conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
+        cursor = conn.cursor()
+        print ("Settings Cog: Database connection established from environment")
+    except:
+        config_object=ConfigParser()
+        config_object.read("SentinelVariables.ini")
+        variables=config_object["variables"]
+        DATABASE_URL=variables["DATABASE_URL"]
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = conn.cursor()
+        print ("Settings Cog: Database connection established from .ini")
     bot.add_cog(Mod(bot))
