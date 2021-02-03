@@ -9,6 +9,17 @@ class Utility(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.command(name="exportroles", aliases=["exportrole","listroles","printroles"])
+    async def exportroles(self, ctx): 
+        embed=discord.Embed(title=f"**{ctx.guild}** Role List:",color=discord.Color.teal())
+        for role in ctx.guild.roles:
+            amount=0
+            for user in ctx.guild.members:
+                if role in user.roles:
+                    amount+=1
+            embed.add_field(name=role,value=f"{amount} users")
+        await ctx.send(embed=embed) 
+###########################################################################
     @commands.command(name="covid", aliases=["corona","covid19","covid-19"])
     async def covid(self, ctx, country=None):
         covid=Covid(source="worldometers")
