@@ -10,7 +10,7 @@
             "`covid`, `memcount`, `temp`, `weather`"
         ,
         "Roles":
-            "`createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `deleterequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
+            "`createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
         ,
         "Miscellaneous":
             "`help`, `yoink`, `purge`, `reload`, `botinfo`, `changelog`"
@@ -72,7 +72,7 @@
             ,".s unlock": "Enables send_messages permissions for all non-admin users in the channel. (Requires `Manage Channels` permissions)"
             ,".s warn (@user) [reason]": "Warns a user (Requires `Kick Members` permissions)"
             ,".s unwarn (@user) (warn ID)": "Removes the selected warning from a user (Requires `Kick Members` permissions)"
-            ,".s warnlist (@user)": "Displays all warnings for the selected user (Requires `Kick Members` permissions)"
+            ,".s warnlist (@user)": "Displays all warnings for the selected user. (Requires `Kick Members` permissions)"
             ,".s mute (@user) [time]": "Mutes a user (Requires `Kick Members` permissions)"
             ,".s unmute (@user)": "Unmutes a muted user (Requires `Kick Members` permissons)"
             ,".s kick (@user) [reason]": "Kicks user from the server (Requires `Kick Members` permissons)"
@@ -91,7 +91,8 @@
         }
     },
     "changeLog":{
-        "2/2/21": "Added `.s unwarn` and `.s warnlist`\nFixed one of the bot statuses"
+        "2/3/21": "Enabled previously disabled role commands and removed `deletereq`\nAdded exceptions to warn/mute/ban commands, and added message if user has no warning history"
+        ,"2/2/21": "Added `.s unwarn` and `.s warnlist`\nFixed one of the bot statuses"
         ,"2/1/21": "Changed all admin commands messages to embeds\nAdded random statuses to bot\nAdded several generic error messages"
         ,"1/31/21":"**Added Saveable Settings**\nAdded several settings for welcome/goodbye message, `.s help Settings` to see available commands\nsAdded `.s rng`."
         ,"1/29/21":"Disabled `fetchreq`, `exportreq`, `rolereq`, `resolvereq`, and `deletereq` for now for fixing."
