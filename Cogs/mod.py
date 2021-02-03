@@ -63,6 +63,9 @@ class Mod(commands.Cog):
             results=cursor.fetchall()
         except Exception as e:
             print (e)
+        if len(results)==0:
+            await ctx.send(embed=discord.Embed(title="This user has no history of warns!"))
+            return
         embed=discord.Embed(title=f"{user}'s Warning History:",color=discord.Color.dark_blue())
         x=0
         for warn in results:
