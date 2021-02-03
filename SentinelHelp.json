@@ -7,7 +7,7 @@
             "`rps`, **DISABLED:**`fight`"
         ,
         "Utility":
-            "`covid`, `memcount`, `temp`, `weather`"
+            "`serverinfo`, `exportroles,`covid`, `memcount`, `temp`, `weather`"
         ,
         "Roles":
             "`createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
@@ -41,19 +41,19 @@
         },
         "utility":{
             ".s covid [country]": "Displays covid-19 statistics for either the world or individual countries"
+            ,".s exportroles": "Lists all roles in the server and how many users have them"
             ,".s serverinfo": "Lists information about the current server"
             ,".s temp (number) (f or c)": "Converts a given fahrenheit or celsius amount to the other unit"
             ,".s weather (city)": "Prints current temperature and weather description of inputed city"
         },
         "roles":{
             
-            ".s createrole (role name) [color-code]":"Creates a role in the guild. Color code must be in hex format without the # (i.e. 7289da) (Requires manage_roles permission)"
-            ,".s deleterole (role name)":"**DISABLED** Deletes the role (Requires `Manage Roles` permission)"
-            ,".s fetchrequests": "**DISABLED** Displays the next role request"
-            ,".s rolerequest (role name) [color-code]":"**DISABLED** Creates a role request"
-            ,".s resolverequest [@user] [role name]":"**DISABLED** If no arguments are entered, deletes the next request in the list. If both arguments are entered, deletes that certain request (Requires `Manage Roles` permission)"
-            ,".s deleterequest [role name]":"Deletes the entered role request, if no name is entered, all your requests will be deleted"
-            ,".s exportreqs":"**DISABLED** Sends a dm to the user with a list of upcoming role requests"
+            ".s createrole (role name) [color-code]":"Creates a role in the guild.\nColor code must be in hex format without the # (i.e. 7289da)\nUse '' around the role name to add a multi-word role\n(Requires `Manage Roles` permission)"
+            ,".s deleterole (role name)":"Deletes the role (Requires `Manage Roles` permission)"
+            ,".s fetchrequests": "Displays the next role request"
+            ,".s rolerequest (role name) [color-code]":"Creates a role request"
+            ,".s resolverequest [@user] [role name]":"If no arguments are entered, deletes the next request in the list. If both arguments are entered, deletes that certain request (Requires `Manage Roles` permission)"
+            ,".s exportreqs":"Sends a dm to the user with a list of upcoming role requests"
             ,".s giverole (@user) (role name)":"Gives the user the inputed role (Requires `Manage Roles` permission)"
             ,".s removerole (@user) (role name)":"Removes the role from the user (Requires `Manage Roles` permission)"
             ,".s editrole (role name)":"Prompts to edit either the role's name or color (Requires `Manage Roles` permission)"
@@ -91,7 +91,7 @@
         }
     },
     "changeLog":{
-        "2/3/21": "Enabled previously disabled role commands and removed `deletereq`\nAdded exceptions to warn/mute/ban commands, and added message if user has no warning history"
+        "2/3/21": "Enabled previously disabled role commands and removed `deletereq`\nAdded exceptions to warn/mute/ban commands and added message if user has no warning history\n Added`.s exportroles`"
         ,"2/2/21": "Added `.s unwarn` and `.s warnlist`\nFixed one of the bot statuses"
         ,"2/1/21": "Changed all admin commands messages to embeds\nAdded random statuses to bot\nAdded several generic error messages"
         ,"1/31/21":"**Added Saveable Settings**\nAdded several settings for welcome/goodbye message, `.s help Settings` to see available commands\nsAdded `.s rng`."
