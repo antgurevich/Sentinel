@@ -36,7 +36,7 @@ async def on_ready():
     elif randNum==3:
         await bot.change_presence(activity=discord.Streaming(name="Idiot Simulator", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"))
     else:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="to Cache's bullshit"))
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Cache's bullshit"))
     print (bot.user.name,"successfully connected to Discord")
 ###########################################################################
 @bot.event #Sends message when bot joins server
