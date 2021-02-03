@@ -16,7 +16,7 @@
             "`help`, `yoink`, `purge`, `reload`, `botinfo`, `changelog`"
         ,
         "Mod":
-            "`slowmode`, `lock`, `unlock`, `warn`, `mute`, `unmute`, `kick`, `ban`, `unban`"
+            "`slowmode`, `lock`, `unlock`, `warn`, `unwarn`, `warnlist`, `mute`, `unmute`, `kick`, `ban`, `unban`"
         ,
         "Settings":
             "`setwelcomemsg`, `enablewelcomemsg`, `welcomepicture`, `setwelcomechannel`, `setleavemsg`, `enableleavemsg`, `leavepicture`, `leavepicture`"
@@ -61,8 +61,8 @@
         "misc":{
             ".s help [category]": "Displays a help guide for Sentinel"
             ,".s yoink": "Retrieves the most recent deleted message and sends it"
-            ,".s purge (number)": "Deletes x amount of messages in the text-channel (requires `Manage Message` permission)"
-            ,".s reload (cog)": "Attempts to reload either all cogs or a certain cog (requires `Admin` permissions)"
+            ,".s purge (number)": "Deletes x amount of messages in the text-channel (Requires `Manage Message` permission)"
+            ,".s reload (cog)": "Attempts to reload either all cogs or a certain cog (Requires `Admin` permissions)"
             ,".s botinfo": "Displays some information about Sentinel"
             ,".s changelog": "Displays changes made to Sentinel"
         },
@@ -70,12 +70,14 @@
             ".s slowmode [seconds]": "Enables slowmode for the channel. Use 0 or enter nothing for seconds to disable slowmode. (Requires `Manage Channels` permissions)"
             ,".s lock": "Disables send_messages permissions for all non-admin users in the channel. (Requires `Manage Channels` permissions)"
             ,".s unlock": "Enables send_messages permissions for all non-admin users in the channel. (Requires `Manage Channels` permissions)"
-            ,".s warn (@user) [reason]": "Warns a user (requires `Kick Members` permissions)"
-            ,".s mute (@user) [time]": "Mutes a user (requires `Kick Members` permissions)"
-            ,".s unmute (@user)": "Unmutes a muted user (requires `Kick Members` permissons)"
-            ,".s kick (@user) [reason]": "Kicks user from the server (requires `Kick Members` permissons)"
-            ,".s ban (@user) [reason]": "Bans user from the server (requires `Ban Members` permissons)"
-            ,".s unban (username#tags)": "Unbans a banned user from the server (requires `Ban Members` permissions)"
+            ,".s warn (@user) [reason]": "Warns a user (Requires `Kick Members` permissions)"
+            ,".s unwarn (@user) (warn ID)": "Removes the selected warning from a user (Requires `Kick Members` permissions)"
+            ,".s warnlist (@user)": "Displays all warnings for the selected user (Requires `Kick Members` permissions)"
+            ,".s mute (@user) [time]": "Mutes a user (Requires `Kick Members` permissions)"
+            ,".s unmute (@user)": "Unmutes a muted user (Requires `Kick Members` permissons)"
+            ,".s kick (@user) [reason]": "Kicks user from the server (Requires `Kick Members` permissons)"
+            ,".s ban (@user) [reason]": "Bans user from the server (Requires `Ban Members` permissons)"
+            ,".s unban (username#tags)": "Unbans a banned user from the server (Requires `Ban Members` permissions)"
         },
         "settings":{
             ".s setwelcomemsg [message]": "Sets the bot message for when someone joins the server. Type %s where you want the user to be mentioned, or leave message blank to set to default (Requires `Manage Server` permission)"
@@ -89,7 +91,8 @@
         }
     },
     "changeLog":{
-        "2/1/21": "Changed all admin commands messages to embeds\nAdded random statuses to bot\nAdded several generic error messages"
+        "2/2/21": "Added `.s unwarn` and `.s warnlist`\nFixed one of the bot statuses"
+        ,"2/1/21": "Changed all admin commands messages to embeds\nAdded random statuses to bot\nAdded several generic error messages"
         ,"1/31/21":"**Added Saveable Settings**\nAdded several settings for welcome/goodbye message, `.s help Settings` to see available commands\nsAdded `.s rng`."
         ,"1/29/21":"Disabled `fetchreq`, `exportreq`, `rolereq`, `resolvereq`, and `deletereq` for now for fixing."
         ,"1/20/21":"Fixed unmuted message appearing when user was manually unmuted"
