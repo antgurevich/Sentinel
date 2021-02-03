@@ -8,6 +8,7 @@ from discord.ext import commands
 class Roles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
 ###########################################################################
     @commands.command(name="fetchrequests",aliases=["fetchreqs", "fetchreq", "fetchrequest"])
     async def fetchrequests(self, ctx):
@@ -28,7 +29,6 @@ class Roles(commands.Cog):
     @commands.command(name="exportreqs",aliases=["exportrequests"])
     @commands.has_permissions(manage_roles=True)
     async def exportreqs(self, ctx):
-        
         sql=("SELECT row_id, user_id, role_name, color FROM role_requests WHERE server_id=%s;")
         cursor.execute(sql, (ctx.guild.id,))
         conn.commit()
@@ -112,7 +112,7 @@ class Roles(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     async def createrole(self, ctx, name, colorCode=None):
         try:
-            msg=await ctx.send("Creating role... This may take a couple seconds...")
+            msg=await ctx.send(embed=discord.Embed(title="Creating role... This may take a couple seconds..."))
             guild=ctx.guild
             if colorCode:
                 color=int("0x"+colorCode,0)
@@ -134,9 +134,9 @@ class Roles(commands.Cog):
     @createrole.error
     async def clear_error(self, ctx, error):
         if isinstance(error,commands.MissingPermissions):
-            await ctx.send("You do not have permissions to manage roles!")
+            await ctx.send(embed=discord.Embed(title="You do not have permissions to manage roles!"))
         elif isinstance(error,commands.MissingRequiredArgument):
-            await ctx.send("You did not provide proper arguments!Use *.s createrole (role name) [optional color-code]*\n**Use "" around the role name to add a multi-word role**")
+            await ctx.send(embed=discord.Embed(title="You did not provide proper arguments!Use `.s createrole (role name) [optional color-code]`\n**Use "" around the role name to add a multi-word role**"))
 ###########################################################################
     @commands.command(name="deleterole", aliases=["delrole"])
     @commands.has_permissions(manage_roles=True)
@@ -151,57 +151,63 @@ class Roles(commands.Cog):
     @deleterole.error
     async def clear_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
-            await ctx.send("You do not have permissions to manage roles!")
+            await ctx.send(embed=discord.Embed(title="You do not have permissions to manage roles!"))
         elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("You must supply a role to delete! Use *.s deleterole (role name)*")
+            await ctx.send(embed=discord.Embed(title="You must supply a role to delete! Use `.s deleterole (role name)`"))
 ###########################################################################
     @commands.command(name="giverole", aliases=["addrole"])
     @commands.has_permissions(manage_roles=True)
     async def giverole(self, ctx, user: discord.Member, *, role: discord.Role):
-        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
-            await ctx.send("You cannot give a role to someone with a higher role than you!")
+        exceptions=[805830355290161153]#Smth
+        if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id) and (user.top_role.id not in exceptions):
+            await ctx.send(embed=discord.Embed(title="You cannot give a role to someone with a higher role than you!"))
             return
         try:
             if role not in user.roles:
                 await user.add_roles(role)
-                await ctx.send(f"Role **{role}** given to {user.mention}")
+                await ctx.send(embed=discord.Embed(title=f"Role **{role}** given to {user}"))
             else:
-                await ctx.send("This person already has this role!")
+                await ctx.send(embed=discord.Embed(title="This person already has this role!"))
         except Exception as e:
             print (e)
 
     @giverole.error
     async def clear_error(self, ctx, error):
-        if isinstance(error, commands.UserNotFound):
-            await ctx.send("User not found!")
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(embed=discord.Embed(title="You do not have `Manage Roles` permissions!"))
+        elif isinstance(error, commands.UserNotFound):
+            await ctx.send(embed=discord.Embed(title="User not found!"))
         elif isinstance(error,commands.RoleNotFound):
-            await ctx.send("Role not found! Make sure to spell/capitalize it correctly")
+            await ctx.send(embed=discord.Embed(title="Role not found! Make sure to spell/capitalize it correctly"))
         elif isinstance(error,commands.MissingRequiredArgument):
-            await ctx.send("Missing required argument! Use *.s giverole (user) (role name)*")
+            await ctx.send(embed=discord.Embed(title="Missing required argument! Use `.s giverole (user) (role name)`"))
 ###########################################################################
     @commands.command(name="removerole")
     @commands.has_permissions(manage_roles=True)
     async def removerole(self, ctx, user: discord.Member, *, role: discord.Role):
-        if (ctx.author.top_role.position < user.top_role.position) and (ctx.guild.owner.id != ctx.author.id):
-            await ctx.send("You cannot remove a role from someone with a higher role than you!")
+        exceptions=[805830355290161153]#Smth
+        if (ctx.author.top_role.position < user.top_role.position) and (ctx.guild.owner.id != ctx.author.id) and (user.top_role.id not in exceptions):
+            await ctx.send(embed=discord.Embed(title="You cannot remove a role from someone with a higher role than you!"))
             return
         try:
             if role in user.roles:
                 await user.remove_roles(role)
-                await ctx.send(f"Role **{role}** removed from {user.mention}")
+                await ctx.send(embed=discord.Embed(title=f"Role **{role}** removed from {user}"))
             else:
-                await ctx.send("This person does not have this role!")
+                await ctx.send(embed=discord.Embed(title="This person does not have this role!",color=discord.Color.red()))
         except Exception as e:
             print (e)
 
     @removerole.error
     async def clear_error(self, ctx, error):
-        if isinstance(error, commands.UserNotFound):
-            await ctx.send("User not found!")
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(embed=discord.Embed(title="Permissions `Manage Roles` is required for this!"))
+        elif isinstance(error, commands.UserNotFound):
+            await ctx.send(embed=discord.Embed(title="User not found!"))
         elif isinstance(error,commands.RoleNotFound):
-            await ctx.send("Role not found! Make sure to spell/capitalize it correctly")
+            await ctx.send(embed=discord.Embed(title="Role not found! Make sure to spell/capitalize it correctly"))
         elif isinstance(error,commands.MissingRequiredArgument):
-            await ctx.send("Missing required argument! Use *.s removerole (user) (role name)*")
+            await ctx.send(embed=discord.Embed(title="Missing required argument! Use `.s removerole (user) (role name)`"))
 ###########################################################################
     @commands.command(name="editrole")
     @commands.has_permissions(manage_roles=True)
@@ -237,14 +243,16 @@ class Roles(commands.Cog):
                 except Exception as e:
                     await ctx.send(embed=discord.Embed(title="Invalid hex color-code. Example: 7289da",color=discord.Color.red()))
         except asyncio.TimeoutError:
-            return await ctx.send("Connection timed out! Enter the original command to restart")
+            return await ctx.send(embed=discord.Embed(title="Connection timed out! Enter the original command to restart"))
 
     @editrole.error
     async def clear_error(self, ctx, error):
-        if isinstance(error,commands.RoleNotFound):
-            await ctx.send("Role not found! Make sure to spell/capitalize it correctly")
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(embed=discord.Embed(title="`Manage Roles` permission is required for this command!"))
+        elif isinstance(error,commands.RoleNotFound):
+            await ctx.send(embed=discord.Embed(title="Role not found! Make sure to spell/capitalize it correctly"))
         elif isinstance(error,commands.MissingRequiredArgument):
-            await ctx.send("Missing required argument! Use *.s editrole (role name)*")
+            await ctx.send(embed=discord.Embed(title="Missing required argument! Use `.s editrole (role name)`"))
 ###########################################################################
 def setup(bot):
     global cursor, conn
