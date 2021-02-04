@@ -7,7 +7,7 @@
             "`rps`, **DISABLED:**`fight`"
         ,
         "Utility":
-            "`serverinfo`, `exportroles,`covid`, `memcount`, `temp`, `weather`"
+            "`serverinfo`, `exportroles`,`covid`, `memcount`, `temp`, `weather`"
         ,
         "Roles":
             "`createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
