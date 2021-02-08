@@ -13,7 +13,7 @@
             "`createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
         ,
         "Miscellaneous":
-            "`help`, `yoink`, `purge`, `reload`, `botinfo`, `changelog`"
+            "`help`, `yoink`, `yoinkedit, `purge`, `reload`, `botinfo`, `changelog`"
         ,
         "Mod":
             "`slowmode`, `lock`, `unlock`, `warn`, `unwarn`, `warnlist`, `mute`, `unmute`, `kick`, `ban`, `unban`"
@@ -61,6 +61,7 @@
         "misc":{
             ".s help [category]": "Displays a help guide for Sentinel"
             ,".s yoink": "Retrieves the most recent deleted message and sends it"
+            ,".s yoinkedit": "Sends a message with the most recent edited message"
             ,".s purge (number)": "Deletes x amount of messages in the text-channel (Requires `Manage Message` permission)"
             ,".s reload (cog)": "Attempts to reload either all cogs or a certain cog (Requires `Admin` permissions)"
             ,".s botinfo": "Displays some information about Sentinel"
@@ -91,7 +92,9 @@
         }
     },
     "changeLog":{
-        "2/3/21": "Enabled previously disabled role commands and removed `deletereq`\nAdded exceptions to warn/mute/ban commands and added message if user has no warning history\n Added`.s exportroles`"
+        "2/7/21": "Added `.s yoinkedit`"
+        ,"2/5/21": "Fixed user join message not showing up"
+        ,"2/3/21": "Enabled previously disabled role commands and removed `deletereq`\nAdded exceptions to warn/mute/ban commands and added message if user has no warning history\n Added`.s exportroles`"
         ,"2/2/21": "Added `.s unwarn` and `.s warnlist`\nFixed one of the bot statuses"
         ,"2/1/21": "Changed all admin commands messages to embeds\nAdded random statuses to bot\nAdded several generic error messages"
         ,"1/31/21":"**Added Saveable Settings**\nAdded several settings for welcome/goodbye message, `.s help Settings` to see available commands\nsAdded `.s rng`."
