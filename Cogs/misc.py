@@ -8,6 +8,25 @@ class Misc(commands.Cog):
         self.bot=bot
 ###########################################################################
     @commands.Cog.listener()
+    async def on_message_edit(self, before, after):
+        global editedMessageBefore, editedMessageAfter, editedAuthor
+        if before.author.id!=self.bot.user.id:
+            editedMessageBefore=before.content
+            editedMessageAfter=after.content
+            editedAuthor=str(before.author)[:-5]
+    
+    @commands.command(name="yoinkedit", aliases=["editsnipe","snipeedit","edityoink"])
+    async def yoinkedit(self, ctx):
+        embed=discord.Embed(title=f"{editedAuthor}'s Absolute :clown: Moment",color=discord.Color.orange())
+        embed.add_field(name="Mans really tried to change",value=editedMessageBefore)
+        embed.add_field(name="To this :clown::",value=editedMessageAfter,inline=False)
+        await ctx.send(embed=embed)
+    
+    @yoinkedit.error
+    async def clear_error(self, ctx, error):
+        await ctx.send("No one edited any messages!")
+###########################################################################
+    @commands.Cog.listener()
     async def on_message_delete(self, message):
         global deletedMessage, deletedAuthor
         if message.author.id!=self.bot.user.id:
