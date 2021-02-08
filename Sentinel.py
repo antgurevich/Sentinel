@@ -32,7 +32,7 @@ async def on_ready():
     if randNum==1:
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Cache be a Moron"))
     elif randNum==2:
-        await bot.change_presence(activity=discord.Game("Cache's Emotions"))
+        await bot.change_presence(activity=discord.Game("with Cache's Emotions"))
     elif randNum==3:
         await bot.change_presence(activity=discord.Streaming(name="Idiot Simulator", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"))
     else:
@@ -57,6 +57,7 @@ async def on_guild_join(guild):
 ###########################################################################
 @bot.event #Sends a message when someone joins the server
 async def on_member_join(member):
+    cursor=conn.cursor()
     sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
     cursor.execute(sql, (member.guild.id, "welcome_channel"))
     result=cursor.fetchone()
@@ -119,8 +120,6 @@ async def on_member_remove(member):
             url="https://media.giphy.com/media/ef0ZKzcEPOBhK/giphy.gif"
         else: #Custom url for image
             url=result[0]
-        member=str(member)
-        member=member[:-5]
         await channel.send(message %member)
         embed=discord.Embed()
         embed.set_image(url=url)
@@ -180,6 +179,8 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=discord.Embed(title="I do not have permission to do that! Try enabling the proper permissions for me and trying again"))
     elif isinstance(error, commands.NoPrivateMessage):
         await ctx.send(embed=discord.Embed(title="This command is only available in servers!"))
+    elif isinstance(error, commands.DisabledCommand):
+        await ctx.send(embed=discord.Embed(title="This command is currently disabled!"))
 ###########################################################################
 try:
     conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
