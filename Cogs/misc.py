@@ -1,5 +1,8 @@
 import asyncio
 import json
+import psycopg2
+from configparser import ConfigParser
+import os
 import discord
 from discord.ext import commands
 
@@ -9,39 +12,84 @@ class Misc(commands.Cog):
 ###########################################################################
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        global editedMessageBefore, editedMessageAfter, editedAuthor
         if before.author.id!=self.bot.user.id:
-            editedMessageBefore=before.content
-            editedMessageAfter=after.content
-            editedAuthor=str(before.author)[:-5]
+            message=before.content
+            #author=str(before.author)[:-5]
+            try:
+                sql=('''SELECT * FROM yoink_command
+                WHERE (guild_id=%s AND yoink_type=%s and channel_id=%s);''')
+                cursor.execute(sql, (before.guild.id, "edit", before.channel.id))
+                if cursor.fetchone() is None:
+                    sql=('''INSERT INTO yoink_command(guild_id, user_id, channel_id, message_content, yoink_type)
+                    VALUES (%s, %s, %s, %s, %s);''')
+                    cursor.execute(sql, (before.guild.id, before.author.id, before.channel.id, message, "edit"))
+                    conn.commit()
+                else:
+                    sql=('''UPDATE yoink_command
+                    SET (user_id=%s AND message_content=%s)
+                    WHERE (guild_id=%s AND yoink_type=%s AND channel_id=%s);''')
+                    cursor.execute(sql, (before.author.id, message, before.guild.id, "edit", before.channel.id))
+                    conn.commit()
+            except Exception as e:
+                print (e)
     
     @commands.command(name="yoinkedit", aliases=["editsnipe","snipeedit","edityoink"])
     async def yoinkedit(self, ctx):
-        embed=discord.Embed(title=f"{editedAuthor}'s Absolute :clown: Moment",color=discord.Color.orange())
-        embed.add_field(name="Mans really tried to change",value=editedMessageBefore)
-        embed.add_field(name="To this :clown::",value=editedMessageAfter,inline=False)
-        await ctx.send(embed=embed)
-    
-    @yoinkedit.error
-    async def clear_error(self, ctx, error):
-        await ctx.send("No one edited any messages!")
+        try:
+            sql=('''SELECT * FROM yoink_command
+                WHERE (guild_id=%s AND yoink_type=%s AND channel_id=%s);''')
+            cursor.execute(sql, (ctx.guild.id, "edit", ctx.channel.id))
+            results=cursor.fetchone()
+            if results is None:
+                await ctx.send(embed=discord.Embed(title="No one edited any messages!"))
+                return
+            else:
+                message=results[4]
+                author=str(self.bot.get_user(results[2]))[:-5]
+                embed=discord.Embed(title=f"{author}'s Absolute :clown: Moment",color=discord.Color.orange())
+                embed.add_field(name="Mans really tried to change",value=f"`{message}`")
+                await ctx.send(embed=embed)
+        except Exception as e:
+            print (e)
 ###########################################################################
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        global deletedMessage, deletedAuthor
         if message.author.id!=self.bot.user.id:
-            deletedAuthor=message.author
-            deletedMessage=message.content
+            try:
+                sql=('''SELECT * FROM yoink_command
+                WHERE (guild_id=%s AND yoink_type=%s and channel_id=%s);''')
+                cursor.execute(sql, (message.guild.id, "delete", message.channel.id))
+                if cursor.fetchone() is None:
+                    sql=('''INSERT INTO yoink_command(guild_id, user_id, channel_id, message_content, yoink_type)
+                    VALUES (%s, %s, %s, %s, %s);''')
+                    cursor.execute(sql, (message.guild.id, message.author.id, message.channel.id, message.content, "delete"))
+                    conn.commit()
+                else:
+                    sql=('''UPDATE yoink_command
+                    SET (user_id=%s AND message_content=%s)
+                    WHERE (guild_id=%s AND yoink_type=%s AND channel_id=%s);''')
+                    cursor.execute(sql, (message.author.id, message.content, message.guild.id, "delete", message.channel.id))
+                    conn.commit()
+            except Exception as e:
+                print (e)
     
     @commands.command(name="yoink", aliases=["snipe","deleted"])
     async def yoink(self, ctx):
-        embed=discord.Embed(color=discord.Color.orange())
-        embed.add_field(name="Imagine trying to delete a message",value=(deletedAuthor.mention+": "+deletedMessage))
-        await ctx.send(embed=embed)
-    
-    @yoink.error
-    async def clear_error(self, ctx, error):
-        await ctx.send("No one deleted any messages!")
+        try:
+            sql=('''SELECT * FROM yoink_command
+                WHERE (guild_id=%s AND yoink_type=%s AND channel_id=%s);''')
+            cursor.execute(sql, (ctx.guild.id, "delete", ctx.channel.id))
+            results=cursor.fetchone()
+            if results is None:
+                await ctx.send(embed=discord.Embed(title="No one deleted any messages!"))
+                return
+            else:
+                author=str(self.bot.get_user(results[2]))[:-5]
+                embed=discord.Embed(color=discord.Color.orange())
+                embed.add_field(name="Imagine trying to delete a message :clown:",value=(f"**{author}:** `{results[4]}`"))
+                await ctx.send(embed=embed)
+        except Exception as e:
+            print (e)
 ###########################################################################
     @commands.command(name="changelog",aliases=["changes","updates"])
     async def changelog(self,ctx):
@@ -133,4 +181,17 @@ class Misc(commands.Cog):
             await ctx.send("Guess what noob? You don't have permission to do this!! :rofl: What a loser")
 ###########################################################################
 def setup(bot):
+    global cursor, conn
+    try:
+        conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
+        cursor=conn.cursor()
+        print ("Misc: Database connection established from environment")
+    except:
+        config_object=ConfigParser()
+        config_object.read("SentinelVariables.ini")
+        variables=config_object["variables"]
+        DATABASE_URL=variables["DATABASE_URL"]
+        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor=conn.cursor()
+        print ("Misc: Database connection established from .ini")
     bot.add_cog(Misc(bot))
