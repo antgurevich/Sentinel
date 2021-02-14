@@ -1,7 +1,7 @@
 {
     "short":{
         "Fun":
-            "`animal`, `meme`, `insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`, `rng`"
+            "`simp`, `pp`, `iq`, `moron`, `gay`, `animal`, `meme`, `insult`, `compliment`, `hack`, `eatburger`, `kill`, `8ball`, `cointoss`, `rng`"
         ,
         "Games":
             "`rps`, **DISABLED:**`fight`"
@@ -24,7 +24,12 @@
     },
     "full":{    
         "fun":{
-            ".s animal": "Displays an animal gif/photo from reddit"
+            ".s simp [@user]": "Displays how much of a simp the user is"
+            ,".s pp [@user]": "Displays how big the user's pp is"
+            ,".s iq [@user]": "Displays how much iq the user has"
+            ,".s moron [@user]": "Displays how dumb the user is"
+            ,".s gay [@user]": "Displays how gay the user is"
+            ,".s animal": "Displays an animal gif/photo from reddit"
             ,".s meme [subreddit] [new/hot/controversial]": "Pulls a meme from reddit"
             ,".s insult (@user)": "Insults a tagged user"
             ,".s compliment (@user)": "Compliments a tagged user"
@@ -92,7 +97,8 @@
         }
     },
     "changeLog":{
-        "2/7/21": "Added `.s yoinkedit`"
+        "2/13/21": "Added `.s pp/simp/iq/moron/gay`.\nFixed `.s yoink/yoinkedit` to only retrieve messages from that channel"
+        ,"2/7/21": "Added `.s yoinkedit`"
         ,"2/5/21": "Fixed user join message not showing up"
         ,"2/3/21": "Enabled previously disabled role commands and removed `deletereq`\nAdded exceptions to warn/mute/ban commands and added message if user has no warning history\n Added`.s exportroles`"
         ,"2/2/21": "Added `.s unwarn` and `.s warnlist`\nFixed one of the bot statuses"
