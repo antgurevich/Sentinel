@@ -10,6 +10,84 @@ class Fun(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.command(name="pp",aliases=["penis","dick"])
+    async def pp(self, ctx, user: discord.Member=None):
+        if user is None:
+            user=ctx.message.author        
+        if (user is None and ctx.message.author.id==338707493188272129) or user.id==338707493188272129:
+            size=("<=================================3")
+            embed=discord.Embed(color=discord.Color.green())
+            embed.add_field(name=f"Bro... PureCache has a fucking tower :flushed:", value=size)
+            await ctx.send(embed=embed)
+            return
+        size=("<")
+        for x in range(0,random.randint(1,10)):
+            size+="="
+        size+="3"
+        embed=discord.Embed(color=discord.Color.teal())
+        embed.add_field(name=f"{str(user)[:-5]}'s pp size:", value=f"{size} :flushed:")
+        await ctx.send(embed=embed)
+
+    @pp.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect argument! Must tag a user\n`.s pp [@user]`"))
+###########################################################################
+    @commands.command(name="simp")
+    async def simp(self, ctx, user: discord.Member=None):
+        if user is None:
+            user=ctx.message.author
+        await ctx.send(embed=discord.Embed(title=f"{str(user)[:-5]} is {random.randint(0,110)}% simp", color=discord.Color.teal()))
+    
+    @simp.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect argument! Must tag a user\n`.s simp [@user]`"))
+###########################################################################
+    @commands.command(name="iq")
+    async def iq(self, ctx, user: discord.Member=None):
+        if user is None:
+            user=ctx.message.author
+        await ctx.send(embed=discord.Embed(title=f"{str(user)[:-5]} has an iq of {random.randint(5,250)}", color=discord.Color.teal()))
+    
+    @iq.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect argument! Must tag a user\n`.s iq [@user]`"))
+###########################################################################
+    @commands.command(name="moron")
+    async def moron(self, ctx, user: discord.Member=None):
+        if user is None:
+            user=ctx.message.author
+        await ctx.send(embed=discord.Embed(title=f"{str(user)[:-5]} is about {random.randint(0,110)}% moron", color=discord.Color.teal()))
+    
+    @moron.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect argument! Must tag a user\n`.s moron [@user]`"))
+###########################################################################
+    @commands.command(name="gay")
+    async def gay(self, ctx, user: discord.Member=None):
+        if user is None:
+            user=ctx.message.author
+        await ctx.send(embed=discord.Embed(title=f"{str(user)[:-5]} is {random.randint(0,110)}% gay", color=discord.Color.red()))
+    
+    @gay.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect argument! Must tag a user\n`.s gay [@user]`"))
+###########################################################################
+    @commands.command(name="hot")
+    async def hot(self, ctx, user: discord.Member=None):
+        if user is None:
+            user=ctx.message.author
+        await ctx.send(embed=discord.Embed(title=f"{str(user)[:-5]} is {random.randint(0,110)}% hot", color=discord.Color.teal()))
+    
+    @hot.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect argument! Must tag a user\n`.s hot [@user]`"))
+###########################################################################
     @commands.command(name="rng",aliases=["randomnum","randnum","numgen"])
     async def rng(self, ctx, start: int, end: int):
         msg=await ctx.send(embed=discord.Embed(title="Generating random number... :arrows_counterclockwise:",color=discord.Color.dark_magenta()))
