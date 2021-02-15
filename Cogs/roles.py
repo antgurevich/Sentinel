@@ -8,7 +8,25 @@ from discord.ext import commands
 class Roles(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+###########################################################################
+    @commands.command(name="exportroles", aliases=["exportrole","listroles","printroles"])
+    async def exportroles(self, ctx): 
+        channel=await ctx.author.create_dm() #Creates dm
+        embed=discord.Embed(title=f"**{ctx.guild}** Role List:",color=discord.Color.teal())
+        sum=0
+        for role in ctx.guild.roles:
+            amount=0
+            sum+=1
+            for user in ctx.guild.members:
+                if role in user.roles:
+                    amount+=1
+            embed.add_field(name=role,value=f"{amount} users")
+            if sum==30:
+                await channel.send(embed=embed)
+                embed=discord.Embed(title=f"**{ctx.guild}** Role List:",color=discord.Color.teal())
+                sum=0
+        await channel.send(embed=embed)
+        await ctx.send(embed=discord.Embed(title="Roles dmed to you!"))
 ###########################################################################
     @commands.command(name="fetchrequests",aliases=["fetchreqs", "fetchreq", "fetchrequest"])
     async def fetchrequests(self, ctx):
