@@ -7,10 +7,10 @@
             "`rps`, **DISABLED:**`fight`"
         ,
         "Utility":
-            "`serverinfo`, `exportroles`,`covid`, `memcount`, `temp`, `weather`"
+            "`serverinfo`, `covid`, `memcount`, `temp`, `weather`"
         ,
         "Roles":
-            "`createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
+            "`exportroles`, `createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
         ,
         "Miscellaneous":
             "`help`, `yoink`, `yoinkedit, `purge`, `reload`, `botinfo`, `changelog`"
@@ -46,14 +46,14 @@
         },
         "utility":{
             ".s covid [country]": "Displays covid-19 statistics for either the world or individual countries"
-            ,".s exportroles": "Lists all roles in the server and how many users have them"
             ,".s serverinfo": "Lists information about the current server"
             ,".s temp (number) (f or c)": "Converts a given fahrenheit or celsius amount to the other unit"
             ,".s weather (city)": "Prints current temperature and weather description of inputed city"
         },
         "roles":{
             
-            ".s createrole (role name) [color-code]":"Creates a role in the guild.\nColor code must be in hex format without the # (i.e. 7289da)\nUse '' around the role name to add a multi-word role\n(Requires `Manage Roles` permission)"
+            ".s exportroles": "Lists all roles in the server and how many users have them"
+            ,".s createrole (role name) [color-code]":"Creates a role in the guild.\nColor code must be in hex format without the # (i.e. 7289da)\nUse '' around the role name to add a multi-word role\n(Requires `Manage Roles` permission)"
             ,".s deleterole (role name)":"Deletes the role (Requires `Manage Roles` permission)"
             ,".s fetchrequests": "Displays the next role request"
             ,".s rolerequest (role name) [color-code]":"Creates a role request"
@@ -97,7 +97,8 @@
         }
     },
     "changeLog":{
-        "2/13/21": "Added `.s pp/simp/iq/moron/gay`.\nFixed `.s yoink/yoinkedit` to only retrieve messages from that channel"
+        "2/14/21": "Moved `.s exportroles` to roles cog instead of utility, and fixed it to work for larger guilds with more roles. Will now dm the list instead of just send it to the server"
+        ,"2/13/21": "Added `.s pp/simp/iq/moron/gay`.\nFixed `.s yoink/yoinkedit` to only retrieve messages from that channel"
         ,"2/7/21": "Added `.s yoinkedit`"
         ,"2/5/21": "Fixed user join message not showing up"
         ,"2/3/21": "Enabled previously disabled role commands and removed `deletereq`\nAdded exceptions to warn/mute/ban commands and added message if user has no warning history\n Added`.s exportroles`"
