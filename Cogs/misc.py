@@ -26,7 +26,7 @@ class Misc(commands.Cog):
                     conn.commit()
                 else:
                     sql=('''UPDATE yoink_command
-                    SET (user_id=%s AND message_content=%s)
+                    SET user_id=%s, message_content=%s
                     WHERE (guild_id=%s AND yoink_type=%s AND channel_id=%s);''')
                     cursor.execute(sql, (before.author.id, message, before.guild.id, "edit", before.channel.id))
                     conn.commit()
@@ -54,6 +54,7 @@ class Misc(commands.Cog):
 ###########################################################################
     @commands.Cog.listener()
     async def on_message_delete(self, message):
+        cursor=conn.cursor()
         if message.author.id!=self.bot.user.id:
             try:
                 sql=('''SELECT * FROM yoink_command
@@ -66,7 +67,7 @@ class Misc(commands.Cog):
                     conn.commit()
                 else:
                     sql=('''UPDATE yoink_command
-                    SET (user_id=%s AND message_content=%s)
+                    SET user_id=%s, message_content=%s
                     WHERE (guild_id=%s AND yoink_type=%s AND channel_id=%s);''')
                     cursor.execute(sql, (message.author.id, message.content, message.guild.id, "delete", message.channel.id))
                     conn.commit()
