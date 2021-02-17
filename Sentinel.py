@@ -181,6 +181,10 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=discord.Embed(title="This command is only available in servers!"))
     elif isinstance(error, commands.DisabledCommand):
         await ctx.send(embed=discord.Embed(title="This command is currently disabled!"))
+    elif isinstance(error, commands.UserNotFound):
+        await ctx.send(embed=discord.Embed(title="User not found! Make sure to correctly tag them"))
+    elif isinstance(error, commands.NotOwner):
+        await ctx.send(embed=discord.Embed(title="You're not the owner dummy"))
 ###########################################################################
 try:
     conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
