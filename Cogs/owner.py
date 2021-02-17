@@ -3,11 +3,35 @@ import os
 import psycopg2
 import datetime
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 class Owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.clearYoinkTask.start()
+###########################################################################
+    @commands.command(name="clearyoink")
+    @commands.is_owner()
+    async def clearyoink(self, ctx):
+        try:
+            sql=("DELETE FROM yoink_command")
+            cursor.execute(sql)
+            conn.commit()
+            await ctx.send(embed=discord.Embed(title="**yoink_command** table cleared"))
+        except Exception as e:
+            await ctx.send(embed=discord.Embed(title=f"Error occured: {e}"))
+
+
+    @tasks.loop(hours=12.0)
+    async def clearYoinkTask(self):
+        try:
+            sql=("DELETE FROM yoink_command")
+            cursor.execute(sql)
+            conn.commit()
+            print (f"'yoink_commands' table cleared at {datetime.datetime.now()}")
+        except Exception as e:
+            channel=self.bot.get_channel(784243375783149568)
+            await channel.send(embed=discord.Embed(title=f"Error occured while clearing 'yoink_commands' table: {e}"))
 ###########################################################################
     @commands.command(name="sendmessage",aliases=["sendmsg","senddm","sendpm"])
     @commands.is_owner()
@@ -15,12 +39,7 @@ class Owner(commands.Cog):
         user = self.bot.get_user(int(id))
         await user.send(message)
         await ctx.send(f"**Message sent to {user}:** {message}")
-    
-    @sendmessage.error
-    async def clear_error(self, ctx, error):
-        if isinstance(error,commands.NotOwner):
-            await ctx.send("You're not the owner dummy")
-    
+
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if message.guild is None and not message.author.bot:
