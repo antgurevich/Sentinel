@@ -97,7 +97,8 @@
         }
     },
     "changeLog":{
-        "2/14/21": "Moved `.s exportroles` to roles cog instead of utility, and fixed it to work for larger guilds with more roles. Will now dm the list instead of just send it to the server\nFixed `.s yoink/yoinkedit`"
+        "2/16/21": "Added more generic errors, and yoink commands only store data for 12 hours now."
+        ,"2/14/21": "Moved `.s exportroles` to roles cog instead of utility, and fixed it to work for larger guilds with more roles. Will now dm the list instead of just send it to the server\nFixed `.s yoink/yoinkedit`"
         ,"2/13/21": "Added `.s pp/simp/iq/moron/gay`.\nFixed `.s yoink/yoinkedit` to only retrieve messages from that channel"
         ,"2/7/21": "Added `.s yoinkedit`"
         ,"2/5/21": "Fixed user join message not showing up"
