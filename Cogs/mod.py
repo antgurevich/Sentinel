@@ -145,7 +145,7 @@ class Mod(commands.Cog):
 ###########################################################################
     @commands.command(name="mute")
     @commands.has_permissions(kick_members=True)
-    async def mute(self,ctx, user: discord.Member, time: str = None):
+    async def mute(self,ctx, user: discord.Member, time: str = None, *, reason):
         exceptions=[805830355290161153]#Smth
         if (ctx.author.top_role.position <= user.top_role.position) and (ctx.guild.owner.id != ctx.author.id) and (user.top_role.id not in exceptions):
             await ctx.send(embed=discord.Embed(title="You are trying to mute someone who has a role higher or equal to yours! Smh my head",color=discord.Color.red()))
@@ -171,8 +171,9 @@ class Mod(commands.Cog):
                 if time is None: #Permamuted
                     await user.add_roles(muteRole)
                     embed=discord.Embed()
-                    embed.add_field(name="You guys wanna see a joke?",value=f"{user.mention} getting muted")
+                    embed.add_field(name="You guys wanna see a joke?",value=f"{user.mention} getting muted for *{reason}*")
                     await ctx.send(embed=embed)
+                
                 else: #User specified time limit
                     timeUnit=None
                     parsedTime=None
@@ -191,7 +192,9 @@ class Mod(commands.Cog):
 
                     await user.add_roles(muteRole)
                     embed=discord.Embed()
-                    embed.add_field(name="You guys wanna see a joke?",value=f"{user.mention} getting silenced for {parsedTime} {timeUnit}, what an L")
+                    
+                    embed.add_field(name="You guys wanna see a joke?",value=f"{user.mention} getting silenced for {parsedTime} {timeUnit} for *{reason}*, what an L")
+                    
                     await ctx.send(embed=embed)
 
                     if timeUnit == "seconds":
@@ -210,9 +213,9 @@ class Mod(commands.Cog):
         if isinstance(error,commands.MissingPermissions):
             await ctx.send(embed=discord.Embed(title="You can't mute people dipshit, you don't have permission"))
         elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(embed=discord.Embed(title="Dude I need a username to be able to mute them :rolling_eyes:\nUse `.s mute (@username) [time]` Example: `.s mute @username 5m`"))
+            await ctx.send(embed=discord.Embed(title="You missed a parameter :rolling_eyes:\nUse `.s mute (@username) [time] (reason)`\nExample: `.s mute @test_user 5m spam`"))
         elif isinstance(error, commands.BadArgument) or isinstance(error, commands.UserNotFound):
-            await ctx.send(embed=discord.Embed(title="Invalid user! Use `.s mute (@username) [time]`"))
+            await ctx.send(embed=discord.Embed(title="Invalid user! Use `.s mute (@username) [time] (reason)`"))
 ###########################################################################
     @commands.command(name="unmute")
     @commands.has_permissions(kick_members=True)
