@@ -1,10 +1,9 @@
 import asyncio
 import json
-import psycopg2
-from configparser import ConfigParser
-import os
 import discord
 from discord.ext import commands
+
+from Cogs.db import dbconnect
 
 class Misc(commands.Cog):
     def __init__(self,bot):
@@ -12,6 +11,7 @@ class Misc(commands.Cog):
 ###########################################################################
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
+        cursor,conn=dbconnect() #Opens connection to db
         if before.author.id!=self.bot.user.id:
             message=before.content
             #author=str(before.author)[:-5]
@@ -32,9 +32,11 @@ class Misc(commands.Cog):
                     conn.commit()
             except Exception as e:
                 print (e)
+        conn.close() #Closes connection to db                
     
     @commands.command(name="yoinkedit", aliases=["editsnipe","snipeedit","edityoink"])
     async def yoinkedit(self, ctx):
+        cursor,conn=dbconnect() #Opens connection to db
         try:
             sql=('''SELECT * FROM yoink_command
                 WHERE (guild_id=%s AND yoink_type=%s AND channel_id=%s);''')
@@ -51,10 +53,11 @@ class Misc(commands.Cog):
                 await ctx.send(embed=embed)
         except Exception as e:
             print (e)
+        conn.close() #Closes connection to db
 ###########################################################################
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        cursor=conn.cursor()
+        cursor,conn=dbconnect() #Opens connection to db
         if message.author.id!=self.bot.user.id:
             try:
                 sql=('''SELECT * FROM yoink_command
@@ -73,9 +76,11 @@ class Misc(commands.Cog):
                     conn.commit()
             except Exception as e:
                 print (e)
+        conn.close() #Closes connection to db
     
     @commands.command(name="yoink", aliases=["snipe","deleted"])
     async def yoink(self, ctx):
+        cursor,conn=dbconnect() #Opens connection to db
         try:
             sql=('''SELECT * FROM yoink_command
                 WHERE (guild_id=%s AND yoink_type=%s AND channel_id=%s);''')
@@ -91,6 +96,7 @@ class Misc(commands.Cog):
                 await ctx.send(embed=embed)
         except Exception as e:
             print (e)
+        conn.close() #Closes connection to db
 ###########################################################################
     @commands.command(name="changelog",aliases=["changes","updates"])
     async def changelog(self,ctx):
@@ -182,17 +188,4 @@ class Misc(commands.Cog):
             await ctx.send("Guess what noob? You don't have permission to do this!! :rofl: What a loser")
 ###########################################################################
 def setup(bot):
-    global cursor, conn
-    try:
-        conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
-        cursor=conn.cursor()
-        print ("Misc: Database connection established from environment")
-    except:
-        config_object=ConfigParser()
-        config_object.read("SentinelVariables.ini")
-        variables=config_object["variables"]
-        DATABASE_URL=variables["DATABASE_URL"]
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor=conn.cursor()
-        print ("Misc: Database connection established from .ini")
     bot.add_cog(Misc(bot))
