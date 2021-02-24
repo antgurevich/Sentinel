@@ -1,8 +1,7 @@
-import os
-from configparser import ConfigParser
-import psycopg2
 import discord
 from discord.ext import commands
+
+from Cogs.db import dbconnect
 
 class Settings(commands.Cog):
     def __init__(self, bot):
@@ -11,6 +10,7 @@ class Settings(commands.Cog):
     @commands.command(name="setwelcomechannel")
     @commands.has_permissions(manage_guild=True)
     async def setwelcomechannel(self, ctx, channel: discord.TextChannel):
+        cursor,conn=dbconnect() #Opens connection to db
         channel=channel.id
         try:
             sql=("SELECT * FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
@@ -30,6 +30,7 @@ class Settings(commands.Cog):
             print (e)
         embed=discord.Embed(title="Join channel set!",color=discord.Color.green())
         await ctx.send(embed=embed)
+        conn.close() #Closes connection to db
 
     @setwelcomechannel.error
     async def clear_error(self, ctx, error):
@@ -43,6 +44,7 @@ class Settings(commands.Cog):
     @commands.command(name="setleavechannel")
     @commands.has_permissions(manage_guild=True)
     async def setleavechannel(self, ctx, channel: discord.TextChannel):
+        cursor,conn=dbconnect() #Opens connection to db
         channel=channel.id
         try:
             sql=("SELECT * FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
@@ -62,6 +64,7 @@ class Settings(commands.Cog):
             print (e)
         embed=discord.Embed(title="Leave channel set!",color=discord.Color.green())
         await ctx.send(embed=embed)
+        conn.close() #Closes connection to db
             
     @setleavechannel.error
     async def clear_error(self, ctx, error):
@@ -75,6 +78,7 @@ class Settings(commands.Cog):
     @commands.command(name="setleavemsg")
     @commands.has_permissions(manage_guild=True)
     async def setleavemsg(self, ctx, *, message=None):
+        cursor,conn=dbconnect() #Opens connection to db
         if message is None:
             message=("Adios %s...")
         
@@ -97,6 +101,7 @@ class Settings(commands.Cog):
             await ctx.send(embed=embed)
         except Exception as e:
             print (e)
+        conn.close() #Closes connection to db
         
     
     @setleavemsg.error
@@ -110,7 +115,7 @@ class Settings(commands.Cog):
         if status.lower() not in ["true","false"]: #Incorrect status parameter
             await ctx.send(embed=discord.Embed(title="Incorrect parameters.\nMust be `.s enableleaveemsg (true/false)`"))
             return
-        
+        cursor,conn=dbconnect() #Opens connection to db
         if status.lower()=="true":
             status="True"
             title="Leave message enabled"
@@ -131,6 +136,7 @@ class Settings(commands.Cog):
             cursor.execute(sql, (ctx.guild.id, "leavestatus",status))
             conn.commit()
         await ctx.send(embed=discord.Embed(title=title,color=discord.Color.dark_teal()))
+        conn.close() #Closes connection to db
 
     @enableleavemsg.error
     async def clear_error(self, ctx, error):
@@ -142,6 +148,7 @@ class Settings(commands.Cog):
     @commands.command(name="leavepicture",aliases=["leavepic"])
     @commands.has_permissions(manage_guild=True)
     async def leavepicture(self, ctx, picture):
+        cursor,conn=dbconnect() #Opens connection to db
         if picture=="default":
             sql=("SELECT * FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
             cursor.execute(sql, (ctx.guild.id,"leave_picture"))
@@ -187,6 +194,7 @@ class Settings(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Leave picture set! :slight_smile:"))
         else:
             await ctx.send(embed=discord.Embed(title="Restart the command and try to paste a different link!"))
+        conn.close() #Closes connection to db
 
     @leavepicture.error
     async def clear_error(self, ctx, error):
@@ -198,6 +206,7 @@ class Settings(commands.Cog):
     @commands.command(name="setwelcomemsg")
     @commands.has_permissions(manage_guild=True)
     async def setwelcomemsg(self, ctx, *, message=None):
+        cursor,conn=dbconnect() #Opens connection to db
         if message is None:
             message=("Well well well... look who joined... welcome to hell %s")
         
@@ -220,6 +229,7 @@ class Settings(commands.Cog):
             await ctx.send(embed=embed)
         except Exception as e:
             print (e)
+        conn.close() #Closes connection to db
     
     @setwelcomemsg.error
     async def clear_error(self, ctx, error):
@@ -233,6 +243,8 @@ class Settings(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Incorrect parameters.\nMust be `.s enablewelcomemsg (true/false)`"))
             return
         
+        cursor,conn=dbconnect() #Opens connection to db
+
         if status.lower()=="true":
             status="True"
             title="Welcome message enabled"
@@ -253,6 +265,7 @@ class Settings(commands.Cog):
             cursor.execute(sql, (ctx.guild.id, "welcome_status",status))
             conn.commit()
         await ctx.send(embed=discord.Embed(title=title,color=discord.Color.dark_teal()))
+        conn.close() #Closes connection to db
 
     @enablewelcomemsg.error
     async def clear_error(self, ctx, error):
@@ -264,6 +277,7 @@ class Settings(commands.Cog):
     @commands.command(name="welcomepicture",aliases=["welcomepic"])
     @commands.has_permissions(manage_guild=True)
     async def welcomepicture(self, ctx, picture):
+        cursor,conn=dbconnect() #Opens connection to db
         if picture=="default":
             sql=("SELECT * FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
             cursor.execute(sql, (ctx.guild.id,"welcome_picture"))
@@ -309,6 +323,7 @@ class Settings(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Welcome picture set! :slight_smile:"))
         else:
             await ctx.send(embed=discord.Embed(title="Restart the command and try to paste a different link!"))
+        conn.close() #Closes connection to db
 
     @welcomepicture.error
     async def clear_error(self, ctx, error):
@@ -318,17 +333,4 @@ class Settings(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Missing `Manage Server` permission"))
 ###########################################################################
 def setup(bot):
-    global cursor, conn
-    try:
-        conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
-        cursor = conn.cursor()
-        print ("Settings Cog: Database connection established from environment")
-    except:
-        config_object=ConfigParser()
-        config_object.read("SentinelVariables.ini")
-        variables=config_object["variables"]
-        DATABASE_URL=variables["DATABASE_URL"]
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = conn.cursor()
-        print ("Settings Cog: Database connection established from .ini")
     bot.add_cog(Settings(bot))
