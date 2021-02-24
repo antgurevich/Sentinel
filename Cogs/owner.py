@@ -9,6 +9,18 @@ class Owner(commands.Cog):
         self.bot = bot
         self.clearYoinkTask.start()
 ###########################################################################
+    @commands.command(name="runsql", aliases=["runquery","sqlquery"])
+    @commands.is_owner()
+    async def runsql(self, ctx, *, sql):
+        cursor,conn=dbconnect() #Opens connection to db
+        try:
+            cursor.execute(sql)
+            conn.commit()
+            await ctx.send(embed=discord.Embed(title="Query Executed",color=discord.Color.green()))
+            conn.close() #Closes connection to db
+        except Exception as e:
+            await ctx.send(embed=discord.Embed(title=f"Error occured: {e}"))
+###########################################################################
     @commands.command(name="clearyoink")
     @commands.is_owner()
     async def clearyoink(self, ctx):
@@ -115,6 +127,41 @@ class Owner(commands.Cog):
     async def clear_error(self, ctx, error):
         if isinstance(error,commands.MissingRequiredArgument):
             await ctx.send(embed=discord.Embed(title="Missing guildID"))
+###########################################################################
+    @commands.command(name='reload') #Reloads cogs
+    @commands.is_owner()
+    async def reloadCogs(self, ctx, arg=None):
+        
+        with open("SentinelHelp.json","r") as cogFile:
+            data=json.load(cogFile)
+        data=data["Cogs"]
+        cogList=list(data.keys())
+        
+        if not arg:
+            await ctx.send("Please type either *.s reload all* to reload all cogs or *.s reload [cog]* to reload a certain cog")
+            return await ctx.send(embed=discord.Embed(title='Cogs:', description="\n".join(cogList)))    
+        if arg.lower() == 'all':
+            for cog in cogList:
+                cog=("Cogs."+cog)
+                await ctx.send(f":arrows_counterclockwise: Reloading `{cog}`...")
+                try:
+                    self.bot.unload_extension(cog)
+                    self.bot.load_extension(cog)
+                except:
+                    await ctx.send(f":x: Reloading `{cog}` Failed!")
+                else:
+                    await ctx.send(f":white_check_mark: Reloaded `{cog}`")
+        
+        elif arg.lower() in cogList:
+            cog=("Cogs."+arg.lower())
+            await ctx.send(f":arrows_counterclockwise: Reloading `{cog}`...")
+            try:
+                self.bot.unload_extension(cog)
+                self.bot.load_extension(cog)
+            except:
+                await ctx.send(f":x: Reloading `{cog}` Failed!")
+            else:
+                await ctx.send(content=f":white_check_mark: Reloaded `{cog}`")
 ###########################################################################
 def setup(bot):
     bot.add_cog(Owner(bot))
