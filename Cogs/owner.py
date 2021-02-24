@@ -1,9 +1,8 @@
-from configparser import ConfigParser
-import os
-import psycopg2
 import datetime
 import discord
 from discord.ext import commands, tasks
+
+from Cogs.db import dbconnect
 
 class Owner(commands.Cog):
     def __init__(self, bot):
@@ -13,22 +12,26 @@ class Owner(commands.Cog):
     @commands.command(name="clearyoink")
     @commands.is_owner()
     async def clearyoink(self, ctx):
+        cursor,conn=dbconnect() #Opens connection to db
         try:
             sql=("DELETE FROM yoink_command")
             cursor.execute(sql)
             conn.commit()
             await ctx.send(embed=discord.Embed(title="**yoink_command** table cleared"))
+            conn.close() #Closes connection to db
         except Exception as e:
             await ctx.send(embed=discord.Embed(title=f"Error occured: {e}"))
 
 
     @tasks.loop(hours=12.0)
     async def clearYoinkTask(self):
+        cursor,conn=dbconnect() #Opens connection to db
         try:
             sql=("DELETE FROM yoink_command")
             cursor.execute(sql)
             conn.commit()
             print (f"'yoink_commands' table cleared at {datetime.datetime.now()}")
+            conn.close() #Closes connection to db
         except Exception as e:
             channel=self.bot.get_channel(784243375783149568)
             await channel.send(embed=discord.Embed(title=f"Error occured while clearing 'yoink_commands' table: {e}"))
@@ -62,6 +65,7 @@ class Owner(commands.Cog):
     @commands.command(name="blacklist",aliases=["banguild","guildban"])
     @commands.is_owner()
     async def blacklist(self, ctx, guildID, reason=None):
+        cursor,conn=dbconnect() #Opens connection to db
         try:
             sql=("SELECT * FROM banned_guilds WHERE guild_id=%s;")
             cursor.execute(sql, (guildID,))
@@ -78,6 +82,7 @@ class Owner(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Guild successfully blacklisted",color=discord.Color.green()))
         except Exception as e:
             print (e)
+        conn.close() #Closes connection to db
 
     @blacklist.error
     async def clear_error(self, ctx, error):
@@ -87,6 +92,7 @@ class Owner(commands.Cog):
     @commands.command(name="removeblacklist",aliases=["unbanguild"])
     @commands.is_owner()
     async def removeblacklist(self, ctx, guildID: int):
+        cursor,conn=dbconnect() #Opens connection to db
         try:
             sql=("SELECT guild_id FROM banned_guilds WHERE guild_id=%s;")
             cursor.execute(sql, (guildID,))
@@ -103,6 +109,7 @@ class Owner(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Guild removed from blacklist"))
         except Exception as e:
             print (e)
+        conn.close() #Closes connection to db
 
     @removeblacklist.error
     async def clear_error(self, ctx, error):
@@ -110,17 +117,4 @@ class Owner(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Missing guildID"))
 ###########################################################################
 def setup(bot):
-    global cursor, conn
-    try:
-        conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
-        cursor = conn.cursor()
-        print ("Owner Cog: Database connection established from environment")
-    except:
-        config_object=ConfigParser()
-        config_object.read("SentinelVariables.ini")
-        variables=config_object["variables"]
-        DATABASE_URL=variables["DATABASE_URL"]
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = conn.cursor()
-        print ("Owner Cog: Database connection established from .ini")
     bot.add_cog(Owner(bot))
