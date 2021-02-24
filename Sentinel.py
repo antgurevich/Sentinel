@@ -1,10 +1,11 @@
-import psycopg2
 import json
 import random
 from configparser import ConfigParser
 import os
 import discord
 from discord.ext import commands
+
+from Cogs.db import dbconnect
 
 bot=commands.Bot(command_prefix=commands.when_mentioned_or(".s ")
                 ,case_insensative=True
@@ -41,11 +42,14 @@ async def on_ready():
 ###########################################################################
 @bot.event #Sends message when bot joins server
 async def on_guild_join(guild):
+    cursor,conn=dbconnect() #Opens connection to db
+    
     sysChannel=guild.system_channel
     
     sql=("SELECT guild_id, reason FROM banned_guilds WHERE guild_id=%s;")
     cursor.execute(sql, (guild.id,))
     result=cursor.fetchone()
+    conn.close() #Closes connection to db
     if result[0]==guild.id:
         await sysChannel.send(embed=discord.Embed(title=f"This server was blacklisted from the bot! Reason: {result[1]}. Contact PureCache#0001 for an appeal"))
         guild=bot.get_guild(guild.id)
@@ -57,7 +61,8 @@ async def on_guild_join(guild):
 ###########################################################################
 @bot.event #Sends a message when someone joins the server
 async def on_member_join(member):
-    cursor=conn.cursor()
+    cursor,conn=dbconnect() #Opens connection to db
+
     sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
     cursor.execute(sql, (member.guild.id, "welcome_channel"))
     result=cursor.fetchone()
@@ -90,9 +95,12 @@ async def on_member_join(member):
         embed=discord.Embed()
         embed.set_image(url=url)
         await channel.send(embed=embed)
+    conn.close() #Closes connection to db
 ###########################################################################
 @bot.event #Sends a message when someone leaves the server
 async def on_member_remove(member):
+    cursor,conn=dbconnect() #Opens connection to db
+    
     sql=("SELECT setting_value FROM guild_settings WHERE (guild_id=%s AND setting=%s)")
     cursor.execute(sql, (member.guild.id, "leave_channel"))
     result=cursor.fetchone()
@@ -124,6 +132,7 @@ async def on_member_remove(member):
         embed=discord.Embed()
         embed.set_image(url=url)
         await channel.send(embed=embed)
+    conn.close() #Closes connection to db
 ###########################################################################
 @bot.command(name="help", aliases=["h","helpinfo"]) #Help messages
 async def help(ctx, type=None):
@@ -167,7 +176,7 @@ async def on_message(message):
         return
     
     if message.content==".s":
-        await message.channel.send(embed=discord.Embed(title=f"Hello {message.author.mention}! Use `.s help` to learn more about me!"))
+        await message.channel.send(embed=discord.Embed(title=f"Hello {message.author}! Use `.s help` to learn more about me!"))
 
     await bot.process_commands(message) #Enables commands
 ###########################################################################
@@ -186,18 +195,6 @@ async def on_command_error(ctx, error):
     elif isinstance(error, commands.NotOwner):
         await ctx.send(embed=discord.Embed(title="You're not the owner dummy"))
 ###########################################################################
-try:
-    conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
-    cursor=conn.cursor()
-    print ("Database connection established from environment")
-except:
-    config_object=ConfigParser()
-    config_object.read("SentinelVariables.ini")
-    variables=config_object["variables"]
-    DATABASE_URL=variables["DATABASE_URL"]
-    conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-    cursor=conn.cursor()
-    print ("Database connection established from .ini")
 try:
     bot.run(os.environ["DISCORDTOKEN"])
 except:
