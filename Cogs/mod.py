@@ -97,7 +97,7 @@ class Mod(commands.Cog):
                 
             sql=('''DELETE FROM moderator_history WHERE (guild_id=%s AND user_id=%s AND row_id=%s);''')
             cursor.execute(sql, (ctx.guild.id, user.id,id))
-            conn.commit
+            conn.commit()
            
         except Exception as e:
             print (e)
