@@ -9,6 +9,15 @@ class Owner(commands.Cog):
         self.bot = bot
         self.clearYoinkTask.start()
 ###########################################################################
+    @commands.command(name="shutdown")
+    @commands.is_owner()
+    async def shutdown(self, ctx):
+        try:
+            await ctx.send(embed=discord.Embed(title="Shutting down **Sentinel**..."))
+            await self.bot.logout()
+        except Exception as e:
+            await ctx.send(embed=discord.Embed(title=f"Error occured: {e}"))
+###########################################################################
     @commands.command(name="runsql", aliases=["runquery","sqlquery"])
     @commands.is_owner()
     async def runsql(self, ctx, *, sql):
