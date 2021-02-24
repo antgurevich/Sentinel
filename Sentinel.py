@@ -184,16 +184,20 @@ async def on_message(message):
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send(embed=discord.Embed(title="Command not found! Use `.s help` for a list of all commands"))
+    elif isinstance(error, commands.CommandOnCooldown):
+        await ctx.send(embed=discord.Embed(title="You are currently on cooldown!"))
     elif isinstance(error, commands.BotMissingPermissions):
         await ctx.send(embed=discord.Embed(title="I do not have permission to do that! Try enabling the proper permissions for me and trying again"))
     elif isinstance(error, commands.NoPrivateMessage):
         await ctx.send(embed=discord.Embed(title="This command is only available in servers!"))
     elif isinstance(error, commands.DisabledCommand):
         await ctx.send(embed=discord.Embed(title="This command is currently disabled!"))
-    elif isinstance(error, commands.UserNotFound):
+    elif isinstance(error, commands.UserNotFound) or isinstance(error, commands.MemberNotFound):
         await ctx.send(embed=discord.Embed(title="User not found! Make sure to correctly tag them"))
     elif isinstance(error, commands.NotOwner):
-        await ctx.send(embed=discord.Embed(title="You're not the owner dummy"))
+        await ctx.send(embed=discord.Embed(title="You're not the owner dummy, you can't use this"))
+    elif isinstance(error, commands.TooManyArguments):
+        await ctx.send(embed=discord.Embed(title="You provided too many arguments! Check the help menu if you need help"))
 ###########################################################################
 try:
     bot.run(os.environ["DISCORDTOKEN"])
