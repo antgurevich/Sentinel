@@ -16,7 +16,7 @@
             "`help`, `yoink`, `yoinkedit, `purge`, `reload`, `botinfo`, `changelog`"
         ,
         "Mod":
-            "`slowmode`, `lock`, `unlock`, `warn`, `unwarn`, `warnlist`, `mute`, `unmute`, `kick`, `ban`, `unban`"
+            "`slowmode`, `lock`, `unlock`, `warn`, `unwarn`, `warnlist`, `mute`, `unmute`, `mutelist`, `clearmute`, `kick`, `ban`, `unban`"
         ,
         "Settings":
             "`setwelcomemsg`, `enablewelcomemsg`, `welcomepicture`, `setwelcomechannel`, `setleavemsg`, `enableleavemsg`, `leavepicture`, `leavepicture`"
@@ -79,8 +79,10 @@
             ,".s warn (@user) [reason]": "Warns a user (Requires `Kick Members` permissions)"
             ,".s unwarn (@user) (warn ID)": "Removes the selected warning from a user (Requires `Kick Members` permissions)"
             ,".s warnlist (@user)": "Displays all warnings for the selected user. (Requires `Kick Members` permissions)"
-            ,".s mute (@user) [time] (reason)": "Mutes a user (Requires `Kick Members` permissions)"
+            ,".s mute (@user) (time) (reason)": "Mutes a user. Use 'perm' for time to perm-mute (Requires `Kick Members` permissions)"
             ,".s unmute (@user)": "Unmutes a muted user (Requires `Kick Members` permissons)"
+            ,".s mutelist (@user)": "Displays mute history for user (Requires `Kick Members` permissions)"
+            ,".s clearmute (@user) (mute ID)": "Removed the selected mute history from a user (Requires `Kick Members` permissions)"
             ,".s kick (@user) [reason]": "Kicks user from the server (Requires `Kick Members` permissons)"
             ,".s ban (@user) [reason]": "Bans user from the server (Requires `Ban Members` permissons)"
             ,".s unban (username#tags)": "Unbans a banned user from the server (Requires `Ban Members` permissions)"
@@ -97,7 +99,8 @@
         }
     },
     "changeLog":{
-        "2/19/12": "Fixed Mute parameter errors, added required parameter 'reason'."
+        "2/23/21": "Added `.s mutelist` and `.s clearmute` for keeping track of mute history\nTime argument in `mute` is now required. Use 'perm' for a permanent mute.\nFixed generic `.s` embed"
+        ,"2/19/21": "Fixed Mute parameter errors, added required parameter 'reason'."
         ,"2/16/21": "Added more generic errors, and yoink commands only store data for 12 hours now."
         ,"2/14/21": "Moved `.s exportroles` to roles cog instead of utility, and fixed it to work for larger guilds with more roles. Will now dm the list instead of just send it to the server\nFixed `.s yoink/yoinkedit`"
         ,"2/13/21": "Added `.s pp/simp/iq/moron/gay`.\nFixed `.s yoink/yoinkedit` to only retrieve messages from that channel"
@@ -131,5 +134,6 @@
         ,"utility":""
         ,"settings":""
         ,"owner":""
+        ,"db": ""
     }
 }
