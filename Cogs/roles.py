@@ -1,9 +1,8 @@
 import asyncio
-import psycopg2
-import os
-from configparser import ConfigParser
 import discord
 from discord.ext import commands
+
+from Cogs.db import dbconnect
 
 class Roles(commands.Cog):
     def __init__(self, bot):
@@ -30,6 +29,7 @@ class Roles(commands.Cog):
 ###########################################################################
     @commands.command(name="fetchrequests",aliases=["fetchreqs", "fetchreq", "fetchrequest"])
     async def fetchrequests(self, ctx):
+        cursor,conn=dbconnect() #Opens connection to db
         sql=("SELECT row_id, user_id, role_name, color FROM role_requests WHERE server_id=%s LIMIT 1;")
         cursor.execute(sql, (ctx.guild.id,))
         conn.commit()
@@ -43,10 +43,12 @@ class Roles(commands.Cog):
         embed.add_field(name="Role Name",value=result[2])
         embed.add_field(name="Color",value=result[3])
         await ctx.send(embed=embed)
+        conn.close() #Closes connection to db
 ###########################################################################
     @commands.command(name="exportreqs",aliases=["exportrequests"])
     @commands.has_permissions(manage_roles=True)
     async def exportreqs(self, ctx):
+        cursor,conn=dbconnect() #Opens connection to db
         sql=("SELECT row_id, user_id, role_name, color FROM role_requests WHERE server_id=%s;")
         cursor.execute(sql, (ctx.guild.id,))
         conn.commit()
@@ -67,6 +69,7 @@ class Roles(commands.Cog):
         await ctx.send(embed=discord.Embed(title="Role Requests dmed to you!",color=discord.Color.green()))
         channel=await ctx.author.create_dm()
         await channel.send(embed=embed) #Sends dm with requests
+        conn.close() #Closes connection to db
     
     @exportreqs.error
     async def clear_error(self, ctx, error):
@@ -76,6 +79,7 @@ class Roles(commands.Cog):
     @commands.command(name="rolerequest",aliases=["rolereq","requestrole","addreq","createreq"])
     #@commands.cooldown(1, 60, commands.BucketType.user)
     async def rolerequest(self, ctx, name, color=None):
+        cursor,conn=dbconnect() #Opens connection to db
         #Makes sure that user isn't submitting multiple requests for the same thing
         try:
             sql=('''SELECT * FROM role_requests WHERE (server_id=%s AND user_id=%s AND role_name=%s)''')
@@ -95,7 +99,8 @@ class Roles(commands.Cog):
         cursor.execute(sql,(ctx.guild.id,ctx.message.author.id, name, color))
         conn.commit()
         await ctx.send(embed=discord.Embed(title="Request submitted! :slight_smile:",color=discord.Color.green()))
-    
+        conn.close() #Closes connection to db
+
     @rolerequest.error
     async def clear_error(self, ctx, error):
         if isinstance(error,commands.MissingRequiredArgument):
@@ -106,6 +111,7 @@ class Roles(commands.Cog):
     @commands.command(name="resolverequest",aliases=["resolvereq", "deleterequest", "removerequest","removereq", "delrequest"])
     @commands.has_permissions(manage_roles=True)
     async def resolverequest(self, ctx, role_id: int):
+        cursor,conn=dbconnect() #Opens connection to db
         try:
             sql=('''SELECT * FROM role_requests WHERE (server_id=%s AND row_id=%s)''')
             cursor.execute(sql, (ctx.guild.id, role_id))
@@ -120,6 +126,7 @@ class Roles(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Request Resolved :D",color=discord.Color.green()))
         except Exception as e:
             print(e)
+        conn.close() #Closes connection to db
     
     @resolverequest.error
     async def clear_error(self, ctx, error):
@@ -273,17 +280,4 @@ class Roles(commands.Cog):
             await ctx.send(embed=discord.Embed(title="Missing required argument! Use `.s editrole (role name)`"))
 ###########################################################################
 def setup(bot):
-    global cursor, conn
-    try:
-        conn=psycopg2.connect(os.environ["DATABASE_URL"], sslmode="require")
-        cursor = conn.cursor()
-        print ("Roles Cog: Database connection established from environment")
-    except:
-        config_object=ConfigParser()
-        config_object.read("SentinelVariables.ini")
-        variables=config_object["variables"]
-        DATABASE_URL=variables["DATABASE_URL"]
-        conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-        cursor = conn.cursor()
-        print ("Roles Cog: Database connection established from .ini")
     bot.add_cog(Roles(bot))
