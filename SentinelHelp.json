@@ -7,13 +7,13 @@
             "`rps`, **DISABLED:**`fight`"
         ,
         "Utility":
-            "`serverinfo`, `covid`, `memcount`, `temp`, `weather`"
+            "`suggestion`, `exportsugg`, `deletesugg`, `serverinfo`, `covid`, `memcount`, `temp`, `weather`"
         ,
         "Roles":
             "`exportroles`, `createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
         ,
         "Miscellaneous":
-            "`help`, `yoink`, `yoinkedit, `purge`, `reload`, `botinfo`, `changelog`"
+            "`help`, `yoink`, `yoinkedit, `purge`, `botinfo`, `changelog`"
         ,
         "Mod":
             "`slowmode`, `lock`, `unlock`, `warn`, `unwarn`, `warnlist`, `mute`, `unmute`, `mutelist`, `clearmute`, `kick`, `ban`, `unban`"
@@ -45,7 +45,10 @@
             ,".s fight (@user)": "**DISABLED** Starts a 'fight' with a tagged person"
         },
         "utility":{
-            ".s covid [country]": "Displays covid-19 statistics for either the world or individual countries"
+            ".s suggestion (suggestion)": "Make a suggestion for the server!"
+            ,".s exportsugg": "Views all suggestions in the server (Requires `Manage Channels` permissions)"
+            ,".s deletesugg (ID #)": "Deletes specified suggestion (Requires `Manage Channels` permissions)"
+            ,".s covid [country]": "Displays covid-19 statistics for either the world or individual countries"
             ,".s serverinfo": "Lists information about the current server"
             ,".s temp (number) (f or c)": "Converts a given fahrenheit or celsius amount to the other unit"
             ,".s weather (city)": "Prints current temperature and weather description of inputed city"
@@ -68,7 +71,6 @@
             ,".s yoink": "Retrieves the most recent deleted message and sends it"
             ,".s yoinkedit": "Sends a message with the most recent edited message"
             ,".s purge (number)": "Deletes x amount of messages in the text-channel (Requires `Manage Message` permission)"
-            ,".s reload (cog)": "Attempts to reload either all cogs or a certain cog (Requires `Admin` permissions)"
             ,".s botinfo": "Displays some information about Sentinel"
             ,".s changelog": "Displays changes made to Sentinel"
         },
@@ -99,7 +101,8 @@
         }
     },
     "changeLog":{
-        "2/23/21": "Added `.s mutelist` and `.s clearmute` for keeping track of mute history\nTime argument in `mute` is now required. Use 'perm' for a permanent mute.\nFixed generic `.s` embed"
+        "2/24/21": "Added 3 suggestion commands\nMoved `.s reload` to owner-only.\nRemoved all generic errors from individual commands"
+        ,"2/23/21": "Added `.s mutelist` and `.s clearmute` for keeping track of mute history\nTime argument in `mute` is now required. Use 'perm' for a permanent mute.\nFixed generic `.s` embed"
         ,"2/19/21": "Fixed Mute parameter errors, added required parameter 'reason'."
         ,"2/16/21": "Added more generic errors, and yoink commands only store data for 12 hours now."
         ,"2/14/21": "Moved `.s exportroles` to roles cog instead of utility, and fixed it to work for larger guilds with more roles. Will now dm the list instead of just send it to the server\nFixed `.s yoink/yoinkedit`"
