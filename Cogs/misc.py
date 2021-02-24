@@ -148,44 +148,5 @@ class Misc(commands.Cog):
             infoEmbed.add_field(name=key,value=infoDict[key],inline=False)
         await ctx.send(embed=infoEmbed)
 ###########################################################################
-    @commands.command(name='reload') #Reloads cogs
-    @commands.has_permissions(administrator=True)
-    async def reloadCogs(self, ctx, arg=None):
-        
-        with open("SentinelHelp.json","r") as cogFile:
-            data=json.load(cogFile)
-        data=data["Cogs"]
-        cogList=list(data.keys())
-        
-        if not arg:
-            await ctx.send("Please type either *.s reload all* to reload all cogs or *.s reload [cog]* to reload a certain cog")
-            return await ctx.send(embed=discord.Embed(title='Cogs:', description="\n".join(cogList)))    
-        if arg.lower() == 'all':
-            for cog in cogList:
-                cog=("Cogs."+cog)
-                await ctx.send(f":arrows_counterclockwise: Reloading `{cog}`...")
-                try:
-                    self.bot.unload_extension(cog)
-                    self.bot.load_extension(cog)
-                except:
-                    await ctx.send(f":x: Reloading `{cog}` Failed!")
-                else:
-                    await ctx.send(f":white_check_mark: Reloaded `{cog}`")
-        
-        elif arg.lower() in cogList:
-            cog=("Cogs."+arg.lower())
-            await ctx.send(f":arrows_counterclockwise: Reloading `{cog}`...")
-            try:
-                self.bot.unload_extension(cog)
-                self.bot.load_extension(cog)
-            except:
-                await ctx.send(f":x: Reloading `{cog}` Failed!")
-            else:
-                await ctx.send(content=f":white_check_mark: Reloaded `{cog}`")
-    @reloadCogs.error
-    async def clear_error(self,ctx,error):
-        if isinstance(error,commands.MissingPermissions):
-            await ctx.send("Guess what noob? You don't have permission to do this!! :rofl: What a loser")
-###########################################################################
 def setup(bot):
     bot.add_cog(Misc(bot))
