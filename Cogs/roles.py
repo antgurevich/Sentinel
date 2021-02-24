@@ -105,8 +105,6 @@ class Roles(commands.Cog):
     async def clear_error(self, ctx, error):
         if isinstance(error,commands.MissingRequiredArgument):
             await ctx.send(embed=discord.Embed(title="You must supply a name for the role!",color=discord.Color.red()))
-        elif isinstance(error,commands.CommandOnCooldown):
-            await ctx.send(embed=discord.Embed(title="You are currently on cooldown!"))
 ###########################################################################
     @commands.command(name="resolverequest",aliases=["resolvereq", "deleterequest", "removerequest","removereq", "delrequest"])
     @commands.has_permissions(manage_roles=True)
@@ -200,8 +198,6 @@ class Roles(commands.Cog):
     async def clear_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(embed=discord.Embed(title="You do not have `Manage Roles` permissions!"))
-        elif isinstance(error, commands.UserNotFound):
-            await ctx.send(embed=discord.Embed(title="User not found!"))
         elif isinstance(error,commands.RoleNotFound):
             await ctx.send(embed=discord.Embed(title="Role not found! Make sure to spell/capitalize it correctly"))
         elif isinstance(error,commands.MissingRequiredArgument):
@@ -227,8 +223,6 @@ class Roles(commands.Cog):
     async def clear_error(self, ctx, error):
         if isinstance(error, commands.MissingPermissions):
             await ctx.send(embed=discord.Embed(title="Permissions `Manage Roles` is required for this!"))
-        elif isinstance(error, commands.UserNotFound):
-            await ctx.send(embed=discord.Embed(title="User not found!"))
         elif isinstance(error,commands.RoleNotFound):
             await ctx.send(embed=discord.Embed(title="Role not found! Make sure to spell/capitalize it correctly"))
         elif isinstance(error,commands.MissingRequiredArgument):
