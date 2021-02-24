@@ -5,9 +5,81 @@ from configparser import ConfigParser
 import discord
 from discord.ext import commands
 
+from Cogs.db import dbconnect
+
 class Utility(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
+###########################################################################
+    @commands.command(name="suggestion")
+    async def suggestion(self, ctx, *, suggestion):
+        try:
+            cursor,conn=dbconnect() #Opens connection to db
+            sql=('''INSERT INTO suggestions(guild_id, user_id, username, suggestion)
+                VALUES (%s, %s, %s, %s)''')
+            cursor.execute(sql, (ctx.guild.id, ctx.message.author.id, str(ctx.message.author), suggestion))
+            conn.commit()
+            conn.close() #Closes connection to db
+            await ctx.send(embed=discord.Embed(title="Suggestion added! Thank you!"))
+        except Exception as e:
+            print (e)
+    
+    @suggestion.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(title="Missing suggestion! Use `.s suggestion (suggestion)`"))
+###########################################################################
+    @commands.command(name="exportsugg",aliases=["exportsuggestions", "viewsuggestions"])
+    @commands.has_permissions(manage_channels=True)
+    async def exportsugg(self, ctx):
+        try:
+            cursor,conn=dbconnect() #Opens connection to db
+            sql=("SELECT row_id, username, suggestion FROM suggestions WHERE (guild_id=%s)")
+            cursor.execute(sql, (ctx.guild.id,))
+            results=cursor.fetchall()
+            conn.close() #Closes connection to db
+            if results is None:
+                await ctx.send(embed=discord.Embed(title="This server has no suggestions!"))
+                return
+    
+            embed=discord.Embed(title=f"{ctx.guild}'s Suggestions:")
+            x=0
+            for suggestion in results:
+                embed.add_field(name=f"ID: {results[x][0]};  Sent by: {results[x][1]}",value=f"{results[x][2]}",inline=False)
+                x+=1
+            await ctx.send(embed=embed)
+
+        except Exception as e:
+            print (e)
+
+    @exportsugg.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(embed=discord.Embed(title="This command requires `Manage Channels` permission"))
+###########################################################################
+    @commands.command(name="deletesugg",aliases=["deletesuggestion", "delsuggestion", "delsugg"])
+    @commands.has_permissions(manage_channels=True)
+    async def deletesugg(self, ctx, id: int):
+        try:
+            cursor,conn=dbconnect() #Opens connection to db
+            sql=("DELETE FROM suggestions WHERE (row_id=%s AND guild_id=%s)")
+            cursor.execute(sql, (id, ctx.guild.id))
+            conn.commit()
+            if cursor.rowcount==0:
+                await ctx.send(embed=discord.Embed(title="Suggestion not found! Make sure to use the correct ID"))
+            else:
+                await ctx.send(embed=discord.Embed(title="Suggestion deleted!"))
+        except Exception as e:
+            print (e)
+
+        conn.close() #Closes connection to db
+    
+    @deletesugg.error
+    async def clear_error(self, ctx, error):
+        if isinstance(error, commands.MissingPermissions):
+            await ctx.send(embed=discord.Embed(title="This command requires `Manage Channels` permission"))
+        elif isinstance(error, commands.BadArgument) or isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send(embed=discord.Embed(title="Incorrect/missing argument! Use `.s deletesugg (id #)`"))
 ###########################################################################
     @commands.command(name="covid", aliases=["corona","covid19","covid-19"])
     async def covid(self, ctx, country=None):
