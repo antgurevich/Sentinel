@@ -31,34 +31,34 @@ async def on_ready():
 
     randNum=random.randint(1,4)
     if randNum==1:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Cache be a Moron"))
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Cache be a Moron [.s]"))
     elif randNum==2:
-        await bot.change_presence(activity=discord.Game("with Cache's Emotions"))
+        await bot.change_presence(activity=discord.Game("with Cache's Emotions [.s]"))
     elif randNum==3:
-        await bot.change_presence(activity=discord.Streaming(name="Idiot Simulator", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"))
+        await bot.change_presence(activity=discord.Streaming(name="Idiot Simulator [.s]", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"))
     else:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Cache's bullshit"))
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Cache's bullshit [.s]"))
     print (bot.user.name,"successfully connected to Discord")
 ###########################################################################
 @bot.event #Sends message when bot joins server
 async def on_guild_join(guild):
     cursor,conn=dbconnect() #Opens connection to db
     
-    sysChannel=guild.system_channel
-    
-    sql=("SELECT guild_id, reason FROM banned_guilds WHERE guild_id=%s;")
+    sql=("SELECT guild_id, reason FROM banned_entities WHERE guild_id=%s;")
     cursor.execute(sql, (guild.id,))
     result=cursor.fetchone()
+    
     conn.close() #Closes connection to db
-    if result[0]==guild.id:
+    if result is None:
+        sysChannel=guild.system_channel
+        if sysChannel:
+            await sysChannel.send(embed=discord.Embed(title="Sup nerds... type *.s help* to learn some stuff about me... if you dare :expressionless:"))
+    elif result[0]==guild.id:
         await sysChannel.send(embed=discord.Embed(title=f"This server was blacklisted from the bot! Reason: {result[1]}. Contact PureCache#0001 for an appeal"))
         guild=bot.get_guild(guild.id)
         await guild.leave()
         return
-    
-    if sysChannel:
-        await sysChannel.send(embed=discord.Embed(title="Sup nerds... type *.s help* to learn some stuff about me... if you dare :expressionless:"))
-###########################################################################
+    ###########################################################################
 @bot.event #Sends a message when someone joins the server
 async def on_member_join(member):
     cursor,conn=dbconnect() #Opens connection to db
@@ -179,6 +179,23 @@ async def on_message(message):
         await message.channel.send(embed=discord.Embed(title=f"Hello {message.author}! Use `.s help` to learn more about me!"))
 
     await bot.process_commands(message) #Enables commands
+###########################################################################
+@bot.check #Checks for blacklisted users
+async def blacklist_check(ctx):
+    try:
+        cursor,conn=dbconnect() #Opens connection to db
+        sql=("SELECT user_id, reason FROM banned_entities WHERE user_id=%s;")
+        cursor.execute(sql, (ctx.author.id,))
+        result=cursor.fetchone()
+        conn.close() #Closes connection to db
+        
+        if result is not None: #Blacklsited
+            await ctx.send(embed=discord.Embed(title=f"You have been blacklisted from the bot for reason: {result[1]}! Contact PureCache#0001 to appeal!"))
+
+        return result is None    
+        
+    except Exception as e:
+        print (e)
 ###########################################################################
 @bot.event #Generic error handling
 async def on_command_error(ctx, error):
