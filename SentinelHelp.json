@@ -101,7 +101,8 @@
         }
     },
     "changeLog":{
-        "2/24/21": "Added 3 suggestion commands\nMoved `.s reload` to owner-only.\nRemoved all generic errors from individual commands"
+        "2/27/21": "Fixed purge embeds & on-guild-join issue\nAdded prefix to statuses"
+        ,"2/24/21": "Added 3 suggestion commands\nMoved `.s reload` to owner-only.\nRemoved all generic errors from individual commands"
         ,"2/23/21": "Added `.s mutelist` and `.s clearmute` for keeping track of mute history\nTime argument in `mute` is now required. Use 'perm' for a permanent mute.\nFixed generic `.s` embed"
         ,"2/19/21": "Fixed Mute parameter errors, added required parameter 'reason'."
         ,"2/16/21": "Added more generic errors, and yoink commands only store data for 12 hours now."
