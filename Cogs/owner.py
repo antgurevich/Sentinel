@@ -9,6 +9,20 @@ class Owner(commands.Cog):
         self.bot = bot
         self.clearYoinkTask.start()
 ###########################################################################
+    @commands.command(name="forceleave",aliases=["botleave","guildleave","leaveguild"])
+    @commands.is_owner()
+    async def forceleave(self, ctx, id: int):
+        try:
+            guild=self.bot.get_guild(id)
+            #guildList=list(self.bot.guilds)
+            if guild in self.bot.guilds:#guildList:
+                await guild.leave()
+                await ctx.send(embed=discord.Embed(title="Left guild"))
+            else:
+                await ctx.send(embed=discord.Embed(title="Sentinel is not in this guild!"))
+        except Exception as e:
+            print(e)
+###########################################################################
     @commands.command(name="shutdown")
     @commands.is_owner()
     async def shutdown(self, ctx):
@@ -83,59 +97,68 @@ class Owner(commands.Cog):
             embed.add_field(name=guild,value=members)#value=guild.channel[0].create_invite())
         await ctx.send(embed=embed)
 ###########################################################################
-    @commands.command(name="blacklist",aliases=["banguild","guildban"])
+    @commands.command(name="blacklist")
     @commands.is_owner()
-    async def blacklist(self, ctx, guildID, reason=None):
+    async def blacklist(self, ctx, id: int, type, reason=None):
+        if type.lower()!="guild" and type.lower()!="user":
+            await ctx.send(embed=discord.Embed("Parameter 'Type' must be either 'guild' or 'user'"))
+            return 
+        
         cursor,conn=dbconnect() #Opens connection to db
         try:
-            sql=("SELECT * FROM banned_guilds WHERE guild_id=%s;")
-            cursor.execute(sql, (guildID,))
-            if cursor.fetchone() is not None: #Guild already blacklisted
-                await ctx.send(embed=discord.Embed(title="Guild is already blacklisted",color=discord.Color.red()))
+            sql=("SELECT row_id FROM banned_entities WHERE (guild_id=%s OR user_id=%s);")
+            cursor.execute(sql, (id,id))
+            if cursor.fetchone() is not None: #Already blacklisted
+                await ctx.send(embed=discord.Embed(title="User or guild is already blacklisted",color=discord.Color.red()))
                 return
         except Exception as e:
-            print (e)
+            await ctx.send(f"Error: {e}")
+
         try:
-            sql=('''INSERT INTO banned_guilds(guild_id, reason, ban_date)
-                VALUES (%s, %s, %s);''')
-            cursor.execute(sql, (guildID, reason, datetime.datetime.now()))
+            if type.lower()=="guild":
+                sql=('''INSERT INTO banned_entities(guild_id, reason, ban_date)
+                    VALUES (%s, %s, %s);''')
+            else:
+                sql=('''INSERT INTO banned_entities(user_id, reason, ban_date)
+                    VALUES (%s, %s, %s);''')
+            cursor.execute(sql, (id, reason, datetime.datetime.now()))
             conn.commit()
-            await ctx.send(embed=discord.Embed(title="Guild successfully blacklisted",color=discord.Color.green()))
+            await ctx.send(embed=discord.Embed(title="User or guild successfully blacklisted",color=discord.Color.green()))
         except Exception as e:
-            print (e)
+            await ctx.send(f"Error: {e}")
         conn.close() #Closes connection to db
 
     @blacklist.error
     async def clear_error(self, ctx, error):
-        if isinstance(error,commands.MissingRequiredArgument):
-            await ctx.send(embed=discord.Embed(title="Missing guildID"))
+        if isinstance(error,commands.MissingRequiredArgument) or isinstance(error, commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Missing/incorrect parameter: `.s blacklist (id) (type) [reason]`"))
 ###########################################################################
     @commands.command(name="removeblacklist",aliases=["unbanguild"])
     @commands.is_owner()
-    async def removeblacklist(self, ctx, guildID: int):
+    async def removeblacklist(self, ctx, id: int):
         cursor,conn=dbconnect() #Opens connection to db
         try:
-            sql=("SELECT guild_id FROM banned_guilds WHERE guild_id=%s;")
-            cursor.execute(sql, (guildID,))
+            sql=("SELECT row_id FROM banned_entities WHERE (guild_id=%s OR user_id=%s);")
+            cursor.execute(sql, (id, id))
             results=cursor.fetchone()
-            if results is None: #Guild is not blacklisted
-                await ctx.send(embed=discord.Embed(title="This guild was not blacklisted!"))
+            if results is None: #Not blacklisted
+                await ctx.send(embed=discord.Embed(title="This guild or user was not blacklisted!"))
                 return
         except Exception as e:
             print (e)
         try:
-            delsql=("DELETE FROM banned_guilds WHERE guild_id=%s;")
-            cursor.execute(delsql, (guildID,))
+            delsql=("DELETE FROM banned_entities WHERE (guild_id=%s OR user_id=%s);")
+            cursor.execute(delsql, (id, id))
             conn.commit()
-            await ctx.send(embed=discord.Embed(title="Guild removed from blacklist"))
+            await ctx.send(embed=discord.Embed(title="Guild/user removed from blacklist"))
         except Exception as e:
             print (e)
         conn.close() #Closes connection to db
 
     @removeblacklist.error
     async def clear_error(self, ctx, error):
-        if isinstance(error,commands.MissingRequiredArgument):
-            await ctx.send(embed=discord.Embed(title="Missing guildID"))
+        if isinstance(error,commands.MissingRequiredArgument) or isinstance(error,commands.BadArgument):
+            await ctx.send(embed=discord.Embed(title="Missing id (or not a number)"))
 ###########################################################################
     @commands.command(name='reload') #Reloads cogs
     @commands.is_owner()
