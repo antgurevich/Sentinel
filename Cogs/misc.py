@@ -114,24 +114,24 @@ class Misc(commands.Cog):
     @commands.has_guild_permissions(manage_messages=True)
     async def purge(self, ctx, limit: int): 
         if limit>50 or limit<1:
-            await ctx.send("Oi cunt! I can only clear between 1 & 50 messages at a time, y u entering something outside that range?!?!")
+            await ctx.send(embed=discord.Embed(title="Oi cunt! I can only clear between 1 & 50 messages at a time, y u entering something outside that range?!?!"))
             return
         try:
             await ctx.message.channel.purge(limit=(limit+1))
-            msg=await ctx.send("Previous "+str(limit)+" messages deleted")
+            msg=await ctx.send(embed=discord.Embed(title=f"Previous {limit} messages deleted"))
             await asyncio.sleep(2)
             await msg.delete()
         except discord.Forbidden:
-           await ctx.send("You didn't give me enough permissions dipshit. Give me `Manage Messages` permission headass")
+           await ctx.send(embed=discord.Embed(title="You didn't give me enough permissions dipshit. Give me `Manage Messages` permission headass"))
 
     @purge.error
     async def clear_error(self, ctx, error):
         if isinstance(error,commands.MissingPermissions):
-            await ctx.send("LLLLL you don't have permission to use this command. Sucks to suck doesn't it")
+            await ctx.send(embed=discord.Embed(title="LLLLL you don't have permission to use this command. Sucks to suck doesn't it"))
         elif isinstance(error,commands.BadArgument):
-            await ctx.send("I can only delete a certain **number** of messages, not a certain **word** of messages, dipshit. Use *.s purge [x]*")
+            await ctx.send(embed=discord.Embed(title="I can only delete a certain **number** of messages, not a certain **word** of messages, dipshit. Use `.s purge (amount)`"))
         elif isinstance(error,commands.MissingRequiredArgument):
-            await ctx.send("Bro, you gotta enter an amount of messages to clear. Use *.s purge [x]* , smh my head")
+            await ctx.send(embed=discord.Embed(title="Bro, you gotta enter an amount of messages to clear. Use `.s purge (amount)` , smh my head"))
 ###########################################################################
     @commands.command(name="botinfo", aliases=["info"]) #Displays informaton about Sentinel
     async def botinfo(self, ctx):
