@@ -9,6 +9,22 @@ class Misc(commands.Cog):
     def __init__(self,bot):
         self.bot=bot
 ###########################################################################
+    @commands.command(name="ping")
+    async def ping(self, ctx):
+        try:
+            embed=discord.Embed(title="**Sentinel's Ping :ping_pong: :**",color=discord.Color.blurple())
+            embed.add_field(name="Quick Estimate",value=f"{round(self.bot.latency*1000,2)} ms")
+            
+            tests=300
+            latencyList=[]
+            for x in range(tests):
+                latencyList.append(self.bot.latency)
+            
+            embed.add_field(name="Average",value=f"{round((sum(latencyList)/tests)*1000,2)} ms",inline=False)
+            await ctx.send(embed=embed)
+        except Exception as e:
+            print(e)
+###########################################################################
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         cursor,conn=dbconnect() #Opens connection to db
