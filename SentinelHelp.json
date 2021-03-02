@@ -13,7 +13,7 @@
             "`exportroles`, `createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
         ,
         "Miscellaneous":
-            "`help`, `yoink`, `yoinkedit, `purge`, `botinfo`, `changelog`"
+            "`help`, `yoink`, `yoinkedit, `purge`, `ping`, `botinfo`, `changelog`"
         ,
         "Mod":
             "`slowmode`, `lock`, `unlock`, `warn`, `unwarn`, `warnlist`, `mute`, `unmute`, `mutelist`, `clearmute`, `kick`, `ban`, `unban`"
@@ -71,6 +71,7 @@
             ,".s yoink": "Retrieves the most recent deleted message and sends it"
             ,".s yoinkedit": "Sends a message with the most recent edited message"
             ,".s purge (number)": "Deletes x amount of messages in the text-channel (Requires `Manage Message` permission)"
+            ,".s ping": "Displays ping"
             ,".s botinfo": "Displays some information about Sentinel"
             ,".s changelog": "Displays changes made to Sentinel"
         },
@@ -101,7 +102,9 @@
         }
     },
     "changeLog":{
-        "2/27/21": "Fixed purge embeds & on-guild-join issue\nAdded prefix to statuses"
+        "3/2/21": "Added `.s ping`"
+        ,"3/1/21": "Fixed a couple error duplication bugs in mod commands"
+        ,"2/27/21": "Fixed purge embeds & on-guild-join issue\nAdded prefix to statuses"
         ,"2/24/21": "Added 3 suggestion commands\nMoved `.s reload` to owner-only.\nRemoved all generic errors from individual commands"
         ,"2/23/21": "Added `.s mutelist` and `.s clearmute` for keeping track of mute history\nTime argument in `mute` is now required. Use 'perm' for a permanent mute.\nFixed generic `.s` embed"
         ,"2/19/21": "Fixed Mute parameter errors, added required parameter 'reason'."
