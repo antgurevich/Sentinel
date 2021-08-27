@@ -13,7 +13,7 @@
             "`exportroles`, `createrole`, `deleterole`, `fetchrequests`, `rolerequest`, `exportreqs`, `giverole`, `removerole`, `editrole`"    
         ,
         "Miscellaneous":
-            "`help`, `yoink`, `yoinkedit, `purge`, `ping`, `botinfo`, `changelog`"
+            "`help`, `yoink`, `yoinkedit`, `purge`, `ping`, `botinfo`, `changelog`"
         ,
         "Mod":
             "`slowmode`, `lock`, `unlock`, `warn`, `unwarn`, `warnlist`, `mute`, `unmute`, `mutelist`, `clearmute`, `kick`, `ban`, `unban`"
