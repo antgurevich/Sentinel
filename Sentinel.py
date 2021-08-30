@@ -29,13 +29,15 @@ async def on_ready():
         except Exception as e:
             print ("Error loading",cog,"e:",e)
 
-    randNum=random.randint(1,4)
+    randNum=random.randint(1,5)
     if randNum==1:
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Cache be a Moron [.s]"))
     elif randNum==2:
         await bot.change_presence(activity=discord.Game("with Cache's Emotions [.s]"))
     elif randNum==3:
         await bot.change_presence(activity=discord.Streaming(name="Idiot Simulator [.s]", url="https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO"))
+    elif randNum==4:
+        await bot.change_presence(activity=discord.Game("with ur mom [.s]"))
     else:
         await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Cache's bullshit [.s]"))
     print (bot.user.name,"successfully connected to Discord")
@@ -209,7 +211,7 @@ async def on_command_error(ctx, error):
         await ctx.send(embed=discord.Embed(title="This command is only available in servers!"))
     elif isinstance(error, commands.DisabledCommand):
         await ctx.send(embed=discord.Embed(title="This command is currently disabled!"))
-    elif isinstance(error, commands.UserNotFound) or isinstance(error, commands.MemberNotFound):
+    elif isinstance(error, commands.MemberNotFound):
         await ctx.send(embed=discord.Embed(title="User not found! Make sure to correctly tag them"))
     elif isinstance(error, commands.NotOwner):
         await ctx.send(embed=discord.Embed(title="You're not the owner dummy, you can't use this"))
