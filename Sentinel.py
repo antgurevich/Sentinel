@@ -51,16 +51,15 @@ async def on_guild_join(guild):
     result=cursor.fetchone()
     
     conn.close() #Closes connection to db
+    sysChannel=guild.system_channel
     if result is None:
-        sysChannel=guild.system_channel
-        if sysChannel:
-            await sysChannel.send(embed=discord.Embed(title="Sup nerds... type *.s help* to learn some stuff about me... if you dare :expressionless:"))
+        await sysChannel.send(embed=discord.Embed(title="Sup nerds... type *.s help* to learn some stuff about me... if you dare :expressionless:"))
     elif result[0]==guild.id:
         await sysChannel.send(embed=discord.Embed(title=f"This server was blacklisted from the bot! Reason: {result[1]}. Contact PureCache#0001 for an appeal"))
         guild=bot.get_guild(guild.id)
         await guild.leave()
         return
-    ###########################################################################
+###########################################################################
 @bot.event #Sends a message when someone joins the server
 async def on_member_join(member):
     cursor,conn=dbconnect() #Opens connection to db
