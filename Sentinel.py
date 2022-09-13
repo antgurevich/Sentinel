@@ -223,5 +223,5 @@ except:
     config_object=ConfigParser()
     config_object.read("SentinelVariables.ini")
     variables=config_object["variables"]
-    DISCORD_TOKEN=variables["DISCORD_TOKEN"]
+    DISCORD_TOKEN=variables["DISCORDTOKEN"]
     bot.run(DISCORD_TOKEN)
